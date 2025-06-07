@@ -13,13 +13,19 @@ export default function ThemeToggle() {
     setMounted(true);
   }, []);
 
+  const handleThemeToggle = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    console.log(`Theme changing from ${theme} to ${newTheme}`);
+    setTheme(newTheme);
+  };
+
   if (!mounted) {
     return null;
   }
 
   return (
     <motion.button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={handleThemeToggle}
       className="relative p-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 dark:from-blue-600 dark:to-purple-600 text-white shadow-lg neon-glow-purple dark:neon-glow-blue transition-all duration-300 hover:shadow-xl"
       aria-label="Toggle theme"
       whileHover={{ scale: 1.1, rotate: 5 }}
