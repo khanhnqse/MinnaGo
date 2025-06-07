@@ -130,169 +130,64 @@ const categories: Category[] = [
 export default function AnimeCategories({
   onCategorySelect,
 }: AnimeCategoriesProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 30,
-      scale: 0.9,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 200,
-        damping: 20,
-      },
-    },
-  };
-
   return (
-    <div className="w-full py-12">
-      <motion.div
-        className="text-center mb-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
-          Browse by Category
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-lg">
-          Discover anime by your favorite genres
-        </p>
-      </motion.div>
+    <div className="py-12">
+      {/* Floating background particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-purple-400/20 rounded-full animate-bounce delay-100"></div>
+        <div className="absolute top-3/4 right-1/3 w-3 h-3 bg-pink-400/20 rounded-full animate-bounce delay-300"></div>
+        <div className="absolute bottom-1/4 left-2/3 w-2 h-2 bg-blue-400/20 rounded-full animate-bounce delay-500"></div>
+      </div>
 
-      <motion.div
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {categories.map((category) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        {categories.map((category, index) => {
           const IconComponent = category.icon;
-
           return (
-            <motion.div
+            <motion.button
               key={category.id}
-              variants={itemVariants}
-              whileHover={{
-                scale: 1.05,
-                y: -8,
-                transition: { type: "spring", stiffness: 300, damping: 25 },
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="group cursor-pointer"
               onClick={() => onCategorySelect(category.query)}
+              className={`group relative p-6 bg-gradient-to-br ${category.color} rounded-xl text-left overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05, y: -8 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <div className="relative overflow-hidden">
-                {/* Gradient background */}
-                <div
-                  className={`bg-gradient-to-br ${category.color} rounded-2xl p-6 h-32 flex flex-col items-center justify-center text-white shadow-lg group-hover:shadow-2xl transition-all duration-300`}
-                >
-                  {/* Floating background particles */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
-                    {[...Array(6)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-white rounded-full"
-                        style={{
-                          left: `${20 + i * 15}%`,
-                          top: `${30 + (i % 2) * 40}%`,
-                        }}
-                        animate={{
-                          y: [0, -20, 0],
-                          opacity: [0, 1, 0],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          delay: i * 0.3,
-                        }}
-                      />
-                    ))}
-                  </div>
+              {/* Background overlay */}
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
 
-                  {/* Icon */}
-                  <motion.div
-                    className="mb-2"
-                    animate={{
-                      rotate: [0, 5, -5, 0],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <IconComponent className="h-8 w-8" />
-                  </motion.div>
-
-                  {/* Category name */}
-                  <h3 className="text-sm font-semibold text-center leading-tight">
-                    {category.name}
-                  </h3>
-                </div>
-
-                {/* Hover description overlay */}
-                <motion.div
-                  className="absolute inset-0 bg-black/80 backdrop-blur-sm rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  initial={false}
-                >
-                  <p className="text-white text-xs text-center px-3 leading-relaxed">
-                    {category.description}
-                  </p>
-                </motion.div>
-
-                {/* Glow effect */}
-                <div
-                  className={`absolute -inset-1 bg-gradient-to-r ${category.color} rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 -z-10`}
-                ></div>
+              {/* Magical sparkles */}
+              <div className="absolute top-2 right-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                <div className="w-1 h-1 bg-white rounded-full animate-pulse"></div>
+                <div className="w-0.5 h-0.5 bg-white rounded-full animate-pulse delay-200 ml-2 -mt-1"></div>
               </div>
-            </motion.div>
+
+              {/* Icon */}
+              <div className="relative mb-3 z-10">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 group-hover:rotate-12">
+                  <IconComponent className="w-6 h-6 text-white drop-shadow-lg" />
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10">
+                <h3 className="text-white font-bold text-lg mb-1 drop-shadow-md group-hover:scale-105 transition-transform duration-300">
+                  {category.name}
+                </h3>
+                <p className="text-white/80 text-sm drop-shadow-sm">
+                  {category.description}
+                </p>
+              </div>
+
+              {/* Hover glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+
+              {/* Border glow */}
+              <div className="absolute inset-0 rounded-xl border border-white/20 group-hover:border-white/40 transition-colors duration-300" />
+            </motion.button>
           );
         })}
-      </motion.div>
-
-      {/* Popular categories highlight */}
-      <motion.div
-        className="mt-12 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
-      >
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Most Popular Categories
-        </p>
-        <div className="flex justify-center gap-2 flex-wrap">
-          {["Action", "Romance", "Comedy", "Fantasy"].map((popular, index) => (
-            <motion.span
-              key={popular}
-              className="px-3 py-1 text-xs bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-full text-purple-600 dark:text-purple-400 cursor-pointer hover:bg-purple-500/20 transition-colors"
-              onClick={() => onCategorySelect(popular.toLowerCase())}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.7 + index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {popular}
-            </motion.span>
-          ))}
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
