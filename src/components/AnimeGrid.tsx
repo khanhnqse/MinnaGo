@@ -4,10 +4,14 @@ import { motion } from "framer-motion";
 
 interface AnimeGridProps {
   animes: Anime[];
+  hasSearched?: boolean;
 }
 
-export default function AnimeGrid({ animes }: AnimeGridProps) {
-  if (animes.length === 0) {
+export default function AnimeGrid({
+  animes,
+  hasSearched = true,
+}: AnimeGridProps) {
+  if (animes.length === 0 && hasSearched) {
     return (
       <motion.div
         className="text-center py-12"

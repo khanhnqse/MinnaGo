@@ -7,15 +7,18 @@ export const useAnimeSearch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-
+  const [autoSearch, setAutoSearch] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const searchAnime = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setAnimes([]);
+      setHasSearched(false);
       return;
     }
 
     setLoading(true);
     setError(null);
+    setHasSearched(true);
 
     try {
       // Using Jikan API (free MyAnimeList API) instead of RapidAPI for this demo
@@ -32,6 +35,10 @@ export const useAnimeSearch = () => {
       setLoading(false);
     }
   }, []);
+
+  const triggerSearch = useCallback(() => {
+    searchAnime(query);
+  }, [searchAnime, query]);
 
   const searchAnimeWithRapidAPI = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -62,16 +69,23 @@ export const useAnimeSearch = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchAnime]);
-
-  useEffect(() => {
+  }, [searchAnime]);  useEffect(() => {
+    if (!autoSearch) {
+      // Clear results when query changes but don't auto-search
+      if (!query.trim()) {
+        setAnimes([]);
+        setError(null);
+        setHasSearched(false);
+      }
+      return;
+    }
+    
     const timeoutId = setTimeout(() => {
       searchAnime(query);
     }, 500); // Debounce for 500ms
 
     return () => clearTimeout(timeoutId);
-  }, [query, searchAnime]);
-
+  }, [query, searchAnime, autoSearch]);
   return {
     animes,
     loading,
@@ -79,5 +93,9 @@ export const useAnimeSearch = () => {
     query,
     setQuery,
     searchAnime: searchAnimeWithRapidAPI,
+    triggerSearch,
+    autoSearch,
+    setAutoSearch,
+    hasSearched,
   };
 };

@@ -10,7 +10,15 @@ import { motion } from "framer-motion";
 import { Sparkles, Heart, Star } from "lucide-react";
 
 export default function Home() {
-  const { animes, loading, error, query, setQuery } = useAnimeSearch();
+  const {
+    animes,
+    loading,
+    error,
+    query,
+    setQuery,
+    triggerSearch,
+    hasSearched,
+  } = useAnimeSearch();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
@@ -92,6 +100,7 @@ export default function Home() {
               <SearchInput
                 value={query}
                 onChange={setQuery}
+                onSearch={triggerSearch}
                 placeholder="Search for anime (e.g., Naruto, Attack on Titan)..."
               />
             </motion.div>
@@ -134,7 +143,9 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         {loading && <LoadingSpinner />}
         {error && <ErrorMessage message={error} />}
-        {!loading && !error && query && <AnimeGrid animes={animes} />}
+        {!loading && !error && query && (
+          <AnimeGrid animes={animes} hasSearched={hasSearched} />
+        )}
 
         {!query && !loading && !error && (
           <motion.div
