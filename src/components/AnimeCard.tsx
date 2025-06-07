@@ -35,7 +35,9 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
             className="relative w-full h-full"
             animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-          >            <Image
+          >
+            {" "}
+            <Image
               src={
                 anime.images.jpg.large_image_url ||
                 anime.images.jpg.image_url ||
