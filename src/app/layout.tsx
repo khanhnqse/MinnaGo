@@ -14,8 +14,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MinnaGo Anime Search",
+  title: "MinnaGo",
   description: "Search and discover anime using MyAnimeList API",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/bilibili.svg", sizes: "32x32", type: "image/svg+xml" },
+      { url: "/bilibili.svg", sizes: "16x16", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/bilibili.svg",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
