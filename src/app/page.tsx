@@ -4,6 +4,7 @@ import { useAnimeSearch } from "@/hooks/useAnimeSearch";
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
 import AnimeGrid from "@/components/AnimeGrid";
+import AnimeCategories from "@/components/AnimeCategories";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import { motion } from "framer-motion";
@@ -17,8 +18,14 @@ export default function Home() {
     query,
     setQuery,
     triggerSearch,
+    searchByCategory,
+    clearResults,
     hasSearched,
   } = useAnimeSearch();
+
+  const handleCategorySelect = (categoryQuery: string) => {
+    searchByCategory(categoryQuery);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900">
@@ -111,8 +118,7 @@ export default function Home() {
             >
               <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">
                 Popular:
-              </span>
-              {[
+              </span>              {[
                 "One Piece",
                 "Demon Slayer",
                 "Attack on Titan",
@@ -120,7 +126,10 @@ export default function Home() {
               ].map((suggestion, index) => (
                 <motion.button
                   key={suggestion}
-                  onClick={() => setQuery(suggestion)}
+                  onClick={() => {
+                    setQuery(suggestion);
+                    triggerSearch();
+                  }}
                   className="text-sm bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-pink-200 dark:border-purple-700 text-pink-600 dark:text-purple-300 px-3 py-1 rounded-full hover:bg-pink-50 dark:hover:bg-purple-800/50 transition-colors duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -137,55 +146,80 @@ export default function Home() {
       </section>
 
       {/* Results Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        {loading && <LoadingSpinner />}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">        {loading && <LoadingSpinner />}
         {error && <ErrorMessage message={error} />}
-        {!loading && !error && query && (
-          <AnimeGrid animes={animes} hasSearched={hasSearched} />
-        )}
+        {!loading && !error && (animes.length > 0 || hasSearched) && (
+          <>
+            {/* Back to Categories button */}
+            {hasSearched && !query && (
+              <motion.div
+                className="mb-8 flex justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <motion.button
+                  onClick={clearResults}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm border border-white/20"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                  <span className="font-medium">Back to Categories</span>
+                </motion.button>
+              </motion.div>
+            )}
+            <AnimeGrid animes={animes} hasSearched={hasSearched} />
+          </>
+        )}{!hasSearched && !loading && !error && (
+          <>
+            <motion.div
+              className="text-center py-16"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+            >
+              <div className="relative">
+                {/* Glowing orb effect */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-32 h-32 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+                </div>
 
-        {!query && !loading && !error && (
-          <motion.div
-            className="text-center py-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
-          >
-            <div className="relative">
-              {/* Glowing orb effect */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+                <div className="relative z-10 text-gray-600 dark:text-gray-300">
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 1.2 }}
+                  >
+                    <Sparkles className="h-16 w-16 mx-auto mb-6 text-pink-400" />
+                  </motion.div>
+
+                  <motion.p
+                    className="text-xl mb-4 font-medium"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 1.4 }}
+                  >
+                    Your anime adventure begins here!
+                  </motion.p>
+
+                  <motion.p
+                    className="text-sm opacity-80"
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 1.6 }}
+                  >
+                    Start typing to discover amazing anime series and movies
+                  </motion.p>
+                </div>
               </div>
+            </motion.div>
 
-              <div className="relative z-10 text-gray-600 dark:text-gray-300">
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 1.2 }}
-                >
-                  <Sparkles className="h-16 w-16 mx-auto mb-6 text-pink-400" />
-                </motion.div>
-
-                <motion.p
-                  className="text-xl mb-4 font-medium"
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 1.4 }}
-                >
-                  Your anime adventure begins here!
-                </motion.p>
-
-                <motion.p
-                  className="text-sm opacity-80"
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 1.6 }}
-                >
-                  Start typing to discover amazing anime series and movies
-                </motion.p>
-              </div>
-            </div>
-          </motion.div>
+            {/* Categories Section */}
+            <AnimeCategories onCategorySelect={handleCategorySelect} />
+          </>
         )}
       </section>
     </div>

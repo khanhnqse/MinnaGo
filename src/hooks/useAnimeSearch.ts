@@ -35,10 +35,19 @@ export const useAnimeSearch = () => {
       setLoading(false);
     }
   }, []);
-
   const triggerSearch = useCallback(() => {
     searchAnime(query);
   }, [searchAnime, query]);
+  const searchByCategory = useCallback((categoryQuery: string) => {
+    searchAnime(categoryQuery);
+  }, [searchAnime]);
+
+  const clearResults = useCallback(() => {
+    setAnimes([]);
+    setHasSearched(false);
+    setError(null);
+    setQuery('');
+  }, []);
 
   const searchAnimeWithRapidAPI = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
@@ -85,8 +94,7 @@ export const useAnimeSearch = () => {
     }, 500); // Debounce for 500ms
 
     return () => clearTimeout(timeoutId);
-  }, [query, searchAnime, autoSearch]);
-  return {
+  }, [query, searchAnime, autoSearch]);  return {
     animes,
     loading,
     error,
@@ -94,6 +102,8 @@ export const useAnimeSearch = () => {
     setQuery,
     searchAnime: searchAnimeWithRapidAPI,
     triggerSearch,
+    searchByCategory,
+    clearResults,
     autoSearch,
     setAutoSearch,
     hasSearched,

@@ -5,11 +5,13 @@ import { motion } from "framer-motion";
 interface AnimeGridProps {
   animes: Anime[];
   hasSearched?: boolean;
+  onBackToCategories?: () => void;
 }
 
 export default function AnimeGrid({
   animes,
   hasSearched = true,
+  onBackToCategories,
 }: AnimeGridProps) {
   if (animes.length === 0 && hasSearched) {
     return (
@@ -64,8 +66,8 @@ export default function AnimeGrid({
                 No Results Found
               </h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                We couldn't find any anime matching your search. Try different
-                keywords or browse popular titles.
+                We couldn&#39;t find any anime matching your search. Try
+                different keywords or browse popular titles.
               </p>
 
               {/* Suggestion pills */}
@@ -81,7 +83,7 @@ export default function AnimeGrid({
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Try "{suggestion}"
+                      Try &quot;{suggestion}&quot;
                     </motion.span>
                   )
                 )}
