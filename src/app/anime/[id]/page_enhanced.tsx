@@ -2,8 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   Star,
@@ -16,19 +15,117 @@ import {
   Bookmark,
   Share,
   Play,
+  ExternalLink,
+  Tv,
+  X,
+  Youtube,
 } from "lucide-react";
 import { useAnimeDetail } from "@/hooks/useAnimeDetail";
 import Header from "@/components/Header";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
-import StreamingModal from "@/components/StreamingModal";
+import { useState } from "react";
+
+// Streaming platforms data
+const streamingPlatforms = [
+  {
+    name: "Crunchyroll",
+    url: "https://www.crunchyroll.com/search?q=",
+    icon: "🔶",
+    color: "from-orange-500 to-yellow-500",
+  },
+  {
+    name: "Funimation",
+    url: "https://www.funimation.com/search?q=",
+    icon: "🟣",
+    color: "from-purple-500 to-indigo-500",
+  },
+  {
+    name: "Netflix",
+    url: "https://www.netflix.com/search?q=",
+    icon: "🔴",
+    color: "from-red-600 to-red-700",
+  },
+  {
+    name: "Hulu",
+    url: "https://www.hulu.com/search?q=",
+    icon: "🟢",
+    color: "from-green-500 to-emerald-500",
+  },
+  {
+    name: "AnimeLab",
+    url: "https://www.animelab.com/search?q=",
+    icon: "🔵",
+    color: "from-blue-500 to-cyan-500",
+  },
+  {
+    name: "MyAnimeList",
+    url: "https://myanimelist.net/anime/",
+    icon: "📺",
+    color: "from-indigo-500 to-purple-500",
+  },
+];
 
 export default function AnimeDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
   const { anime, loading, error } = useAnimeDetail(id);
-  const [isStreamingModalOpen, setIsStreamingModalOpen] = useState(false);
+
+  const [showWatchModal, setShowWatchModal] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const handleWatchNow = () => {
+    setShowWatchModal(true);
+  };
+
+  const handlePlatformClick = (platform: (typeof streamingPlatforms)[0]) => {
+    let searchUrl: string;
+
+    if (platform.name === "MyAnimeList") {
+      searchUrl = `${platform.url}${id}`;
+    } else {
+      searchUrl = `${platform.url}${encodeURIComponent(anime?.title || "")}`;
+    }
+
+    window.open(searchUrl, "_blank");
+    setShowWatchModal(false);
+  };
+
+  const handleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    // Here you would typically save to localStorage or send to API
+  };
+
+  const handleBookmark = () => {
+    setIsBookmarked(!isBookmarked);
+    // Here you would typically save to localStorage or send to API
+  };
+
+  const handleShare = () => {
+    if (navigator.share && anime) {
+      navigator.share({
+        title: anime.title,
+        text: `Check out this anime: ${anime.title}`,
+        url: window.location.href,
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      // You could show a toast notification here
+    }
+  };
+
+  const searchOnYouTube = () => {
+    const searchQuery = `${anime?.title} anime trailer`;
+    window.open(
+      `https://www.youtube.com/results?search_query=${encodeURIComponent(
+        searchQuery
+      )}`,
+      "_blank"
+    );
+  };
 
   if (loading) {
     return (
@@ -107,20 +204,37 @@ export default function AnimeDetailPage() {
                   transition={{ duration: 0.3, delay: 0.1 }}
                 >
                   <motion.button
-                    className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-pink-500 hover:text-white transition-all duration-200"
+                    onClick={handleFavorite}
+                    className={`backdrop-blur-sm p-3 rounded-full shadow-lg transition-all duration-200 ${
+                      isFavorite
+                        ? "bg-red-500 text-white"
+                        : "bg-white/90 dark:bg-gray-900/90 hover:bg-red-500 hover:text-white"
+                    }`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <Heart className="h-5 w-5" />
+                    <Heart
+                      className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`}
+                    />
                   </motion.button>
                   <motion.button
-                    className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-blue-500 hover:text-white transition-all duration-200"
+                    onClick={handleBookmark}
+                    className={`backdrop-blur-sm p-3 rounded-full shadow-lg transition-all duration-200 ${
+                      isBookmarked
+                        ? "bg-blue-500 text-white"
+                        : "bg-white/90 dark:bg-gray-900/90 hover:bg-blue-500 hover:text-white"
+                    }`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <Bookmark className="h-5 w-5" />
+                    <Bookmark
+                      className={`h-5 w-5 ${
+                        isBookmarked ? "fill-current" : ""
+                      }`}
+                    />
                   </motion.button>
                   <motion.button
+                    onClick={handleShare}
                     className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-green-500 hover:text-white transition-all duration-200"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -169,33 +283,53 @@ export default function AnimeDetailPage() {
                 )}
               </div>
 
-              {/* Action Buttons */}
+              {/* Enhanced Action Buttons */}
               <motion.div
                 className="flex flex-wrap gap-3 mb-8"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
-                {" "}
                 <motion.button
+                  onClick={handleWatchNow}
                   className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:from-pink-600 hover:to-purple-600 transition-all duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsStreamingModalOpen(true)}
                 >
                   <Play className="h-5 w-5 fill-current" />
                   <span>Watch Now</span>
                 </motion.button>
+
                 <motion.button
-                  className="flex items-center space-x-2 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200"
+                  onClick={searchOnYouTube}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:from-red-600 hover:to-red-700 transition-all duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Heart className="h-5 w-5" />
-                  <span>Add to List</span>
+                  <Youtube className="h-5 w-5" />
+                  <span>Trailer</span>
+                </motion.button>
+
+                <motion.button
+                  onClick={handleFavorite}
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold border transition-all duration-200 ${
+                    isFavorite
+                      ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+                      : "bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Heart
+                    className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`}
+                  />
+                  <span>
+                    {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                  </span>
                 </motion.button>
               </motion.div>
 
+              {/* Rest of the existing content... */}
               {/* Stats Grid */}
               <motion.div
                 className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8"
@@ -350,6 +484,7 @@ export default function AnimeDetailPage() {
                     </p>
                   </motion.div>
                 )}
+
                 {anime.popularity && (
                   <motion.div
                     className="bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm p-4 rounded-xl border border-gray-200 dark:border-gray-600/50"
@@ -366,6 +501,7 @@ export default function AnimeDetailPage() {
                     </p>
                   </motion.div>
                 )}
+
                 {anime.status && (
                   <motion.div
                     className="bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm p-4 rounded-xl border border-gray-200 dark:border-gray-600/50"
@@ -381,19 +517,95 @@ export default function AnimeDetailPage() {
                       {anime.status}
                     </p>
                   </motion.div>
-                )}{" "}
+                )}
               </motion.div>
             </motion.div>
           </div>
         </motion.div>
       </main>
 
-      {/* Streaming Modal */}
-      <StreamingModal
-        isOpen={isStreamingModalOpen}
-        onClose={() => setIsStreamingModalOpen(false)}
-        animeTitle={anime.title || anime.title_english || "Anime"}
-      />
+      {/* Watch Modal */}
+      <AnimatePresence>
+        {showWatchModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              onClick={() => setShowWatchModal(false)}
+            />
+
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden border border-gray-200 dark:border-gray-700">
+                {/* Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center space-x-3">
+                    <Tv className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                      Watch {anime.title}
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setShowWatchModal(false)}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    <X className="h-5 w-5 text-gray-500" />
+                  </button>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    Choose a streaming platform to watch{" "}
+                    <strong>{anime.title}</strong>:
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {streamingPlatforms.map((platform, index) => (
+                      <motion.button
+                        key={platform.name}
+                        onClick={() => handlePlatformClick(platform)}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.02, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`flex items-center space-x-3 p-4 bg-gradient-to-r ${platform.color} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200`}
+                      >
+                        <span className="text-2xl">{platform.icon}</span>
+                        <div className="text-left">
+                          <div className="font-semibold">{platform.name}</div>
+                          <div className="text-sm opacity-90">
+                            Search & Watch
+                          </div>
+                        </div>
+                        <ExternalLink className="h-5 w-5 ml-auto" />
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <p>
+                      * We&apos;ll search for this anime on the selected
+                      platform
+                    </p>
+                    <p>Availability may vary by region and platform</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
