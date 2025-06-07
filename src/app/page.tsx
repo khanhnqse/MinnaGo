@@ -118,7 +118,8 @@ export default function Home() {
             >
               <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">
                 Popular:
-              </span>              {[
+              </span>{" "}
+              {[
                 "One Piece",
                 "Demon Slayer",
                 "Attack on Titan",
@@ -146,7 +147,9 @@ export default function Home() {
       </section>
 
       {/* Results Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">        {loading && <LoadingSpinner />}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        {" "}
+        {loading && <LoadingSpinner />}
         {error && <ErrorMessage message={error} />}
         {!loading && !error && (animes.length > 0 || hasSearched) && (
           <>
@@ -164,8 +167,18 @@ export default function Home() {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                    />
                   </svg>
                   <span className="font-medium">Back to Categories</span>
                 </motion.button>
@@ -173,7 +186,8 @@ export default function Home() {
             )}
             <AnimeGrid animes={animes} hasSearched={hasSearched} />
           </>
-        )}{!hasSearched && !loading && !error && (
+        )}
+        {!hasSearched && !loading && !error && (
           <>
             <motion.div
               className="text-center py-16"

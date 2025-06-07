@@ -5,13 +5,11 @@ import { motion } from "framer-motion";
 interface AnimeGridProps {
   animes: Anime[];
   hasSearched?: boolean;
-  onBackToCategories?: () => void;
 }
 
 export default function AnimeGrid({
   animes,
   hasSearched = true,
-  onBackToCategories,
 }: AnimeGridProps) {
   if (animes.length === 0 && hasSearched) {
     return (
