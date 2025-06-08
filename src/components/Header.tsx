@@ -30,7 +30,7 @@ export default function Header() {
               <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-60 animate-pulse delay-300"></div>
             </motion.div>
             <div className="text-2xl font-bold bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
-              みんなご
+              MinnaGo
             </div>
           </Link>{" "}
           {/* Navigation */}

@@ -7,8 +7,10 @@ import AnimeGrid from "@/components/AnimeGrid";
 import AnimeCategories from "@/components/AnimeCategories";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const {
@@ -22,6 +24,27 @@ export default function Home() {
     clearResults,
     hasSearched,
   } = useAnimeSearch();
+
+  // Background image carousel state
+  const backgroundImages = [
+    "/4f2878220213515.67bf12e77d063.jpg",
+    "/9cef14220213515.67bf12e77ca41.jpg",
+    "/b882ca220213515.67bf12e77d63a.jpg",
+    "/34e2b8220213515.67bf12e77c4b6.jpg",
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-slide background images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % backgroundImages.length
+      );
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
 
   const handleCategorySelect = (categoryQuery: string) => {
     searchByCategory(categoryQuery);
@@ -62,12 +85,37 @@ export default function Home() {
               )}
             </motion.div>
           ))}
-        </div>
-
+        </div>{" "}
         {/* Hero Banner */}
-        <div className="relative h-[60vh] bg-gradient-to-r from-purple-900/20 via-pink-500/10 to-indigo-900/20 dark:from-purple-900/40 dark:via-pink-500/20 dark:to-indigo-900/40">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/50 dark:to-black/50"></div>
+        <div className="relative h-[60vh] overflow-hidden">
+          {/* Background Image Carousel */}
+          <div className="absolute inset-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentImageIndex}
+                className="absolute inset-0"
+                initial={{ opacity: 0, scale: 1.1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+              >
+                <Image
+                  src={backgroundImages[currentImageIndex]}
+                  alt="Anime background"
+                  fill
+                  className="object-cover"
+                  priority
+                  quality={85}
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
+
+          {/* Content */}
           <div className="relative z-10 h-full flex items-center">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="max-w-3xl">
@@ -76,10 +124,10 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <h1 className="text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                  <h1 className="text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent drop-shadow-2xl">
                     みんなご
                   </h1>
-                  <p className="text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                  <p className="text-xl text-white/90 mb-8 leading-relaxed drop-shadow-lg">
                     Discover, explore, and dive into the magical world of anime.
                     Find your next favorite series from thousands of titles.
                   </p>
@@ -87,26 +135,41 @@ export default function Home() {
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 mb-8">
                     <motion.button
-                      className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Start Watching Free
+                      ✨ Start Watching Free
                     </motion.button>
+
                     <motion.button
-                      className="border-2 border-purple-500 text-purple-600 dark:text-purple-400 hover:bg-purple-500 hover:text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 backdrop-blur-sm"
+                      className="bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Browse Anime
+                      Browse Collection
                     </motion.button>
+                  </div>
+
+                  {/* Image indicators */}
+                  <div className="flex gap-2">
+                    {backgroundImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          index === currentImageIndex
+                            ? "bg-white w-8"
+                            : "bg-white/50 hover:bg-white/70"
+                        }`}
+                      />
+                    ))}
                   </div>
                 </motion.div>
               </div>
             </div>
           </div>
         </div>
-
         {/* Search Section */}
         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-purple-200 dark:border-purple-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -207,7 +270,7 @@ export default function Home() {
           {!hasSearched && !loading && !error && (
             <>
               {/* Featured Categories Section */}
-              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-3xl border border-purple-200/50 dark:border-purple-800/50 pt-12 mt-8">
+              <div className="pt-12 mt-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <motion.div
                     className="text-center mb-12"
