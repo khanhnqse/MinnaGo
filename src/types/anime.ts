@@ -69,3 +69,56 @@ export interface ApiResponse {
     };
   };
 }
+
+export interface AnimeVideo {
+  youtube?: {
+    youtube_id: string;
+    url: string;
+    embed_url: string;
+    images: {
+      image_url: string;
+      small_image_url: string;
+      medium_image_url: string;
+      large_image_url: string;
+      maximum_image_url: string;
+    };
+  };
+}
+
+export interface AnimeTrailer {
+  youtube_id?: string;
+  url?: string;
+  embed_url?: string;
+  images?: {
+    image_url?: string;
+    small_image_url?: string;
+    medium_image_url?: string;
+    large_image_url?: string;
+    maximum_image_url?: string;
+  };
+}
+
+export interface VideoPromo {
+  title: string;
+  trailer: AnimeTrailer;
+}
+
+export interface VideoEpisode {
+  mal_id: number;
+  title: string;
+  episode: string;
+  url: string;
+  images: {
+    jpg: {
+      image_url: string;
+    };
+  };
+}
+
+export interface AnimeVideosResponse {
+  data: {
+    promo: VideoPromo[];
+    episodes: VideoEpisode[];
+    music_videos: VideoPromo[];
+  };
+}

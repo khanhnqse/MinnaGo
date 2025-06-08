@@ -18,16 +18,23 @@ import {
   Play,
 } from "lucide-react";
 import { useAnimeDetail } from "@/hooks/useAnimeDetail";
+import { useAnimeVideos } from "@/hooks/useAnimeVideos";
 import Header from "@/components/Header";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import StreamingModal from "@/components/StreamingModal";
+import VideoPlayer from "@/components/VideoPlayer";
 
 export default function AnimeDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
   const { anime, loading, error } = useAnimeDetail(id);
+  const {
+    videos,
+    loading: videosLoading,
+    error: videosError,
+  } = useAnimeVideos(parseInt(id));
   const [isStreamingModalOpen, setIsStreamingModalOpen] = useState(false);
 
   if (loading) {
@@ -168,7 +175,6 @@ export default function AnimeDetailPage() {
                   </motion.p>
                 )}
               </div>
-
               {/* Action Buttons */}
               <motion.div
                 className="flex flex-wrap gap-3 mb-8"
@@ -195,7 +201,6 @@ export default function AnimeDetailPage() {
                   <span>Add to List</span>
                 </motion.button>
               </motion.div>
-
               {/* Stats Grid */}
               <motion.div
                 className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8"
@@ -279,7 +284,6 @@ export default function AnimeDetailPage() {
                   </motion.div>
                 )}
               </motion.div>
-
               {/* Genres */}
               {anime.genres && anime.genres.length > 0 && (
                 <motion.div
@@ -306,8 +310,7 @@ export default function AnimeDetailPage() {
                     ))}
                   </div>
                 </motion.div>
-              )}
-
+              )}{" "}
               {/* Synopsis */}
               {anime.synopsis && (
                 <motion.div
@@ -326,7 +329,20 @@ export default function AnimeDetailPage() {
                   </div>
                 </motion.div>
               )}
-
+              {/* Videos Section */}
+              {videos && !videosLoading && !videosError && (
+                <motion.div
+                  className="mb-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.05 }}
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                    Videos & Trailers
+                  </h3>
+                  <VideoPlayer videos={videos} />
+                </motion.div>
+              )}
               {/* Additional Stats */}
               <motion.div
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
