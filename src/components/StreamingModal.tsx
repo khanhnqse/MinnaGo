@@ -1,15 +1,15 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, Play, Tv } from "lucide-react";
+import { X, Tv } from "lucide-react";
 
-interface StreamingPlatform {
-  name: string;
-  url: string;
-  icon: string;
-  color: string;
-  description: string;
-}
+// interface StreamingPlatform {
+//   name: string;
+//   url: string;
+//   icon: string;
+//   color: string;
+//   description: string;
+// }
 
 interface StreamingModalProps {
   isOpen: boolean;
@@ -17,74 +17,74 @@ interface StreamingModalProps {
   animeTitle: string;
 }
 
-const streamingPlatforms: StreamingPlatform[] = [
-  {
-    name: "Crunchyroll",
-    url: "https://www.crunchyroll.com/search?q=",
-    icon: "🟠",
-    color: "from-orange-500 to-orange-600",
-    description: "Premium anime streaming",
-  },
-  {
-    name: "Funimation",
-    url: "https://www.funimation.com/search/?q=",
-    icon: "🟣",
-    color: "from-purple-500 to-purple-600",
-    description: "Dubbed & subbed anime",
-  },
-  {
-    name: "Netflix",
-    url: "https://www.netflix.com/search?q=",
-    icon: "🔴",
-    color: "from-red-500 to-red-600",
-    description: "Global streaming platform",
-  },
-  {
-    name: "Hulu",
-    url: "https://www.hulu.com/search?q=",
-    icon: "🟢",
-    color: "from-green-500 to-green-600",
-    description: "US streaming service",
-  },
-  {
-    name: "AnimeLab",
-    url: "https://www.animelab.com/search?q=",
-    icon: "🔵",
-    color: "from-blue-500 to-blue-600",
-    description: "Australian anime platform",
-  },
-  {
-    name: "9anime",
-    url: "https://9anime.to/search?keyword=",
-    icon: "⚡",
-    color: "from-yellow-500 to-yellow-600",
-    description: "Free anime streaming",
-  },
-  {
-    name: "GogoAnime",
-    url: "https://gogoanime.so//search.html?keyword=",
-    icon: "🎭",
-    color: "from-indigo-500 to-indigo-600",
-    description: "Free anime episodes",
-  },
-  {
-    name: "AnimixPlay",
-    url: "https://animixplay.to/?q=",
-    icon: "🎬",
-    color: "from-pink-500 to-pink-600",
-    description: "HD anime streaming",
-  },
-];
+// const streamingPlatforms: StreamingPlatform[] = [
+//   {
+//     name: "Crunchyroll",
+//     url: "https://www.crunchyroll.com/search?q=",
+//     icon: "🟠",
+//     color: "from-orange-500 to-orange-600",
+//     description: "Available in Vietnam & worldwide",
+//   },
+//   {
+//     name: "Netflix",
+//     url: "https://www.netflix.com/search?q=",
+//     icon: "🔴",
+//     color: "from-red-500 to-red-600",
+//     description: "Global platform with Vietnamese subs",
+//   },
+//   {
+//     name: "Bilibili",
+//     url: "https://www.bilibili.com/search?keyword=",
+//     icon: "📺",
+//     color: "from-cyan-500 to-blue-600",
+//     description: "Popular in Asia with English subs",
+//   },
+//   {
+//     name: "iQiyi",
+//     url: "https://www.iq.com/search/",
+//     icon: "🟢",
+//     color: "from-green-500 to-green-600",
+//     description: "Available in Vietnam & Southeast Asia",
+//   },
+//   {
+//     name: "Tubi",
+//     url: "https://tubitv.com/search/",
+//     icon: "🔵",
+//     color: "from-blue-500 to-blue-600",
+//     description: "Free streaming with ads",
+//   },
+//   {
+//     name: "Animeflix",
+//     url: "https://animeflix.live/search?keyword=",
+//     icon: "🎬",
+//     color: "from-purple-500 to-purple-600",
+//     description: "Free anime with multiple languages",
+//   },
+//   {
+//     name: "Animesuge",
+//     url: "https://animesuge.to/search?keyword=",
+//     icon: "⚡",
+//     color: "from-yellow-500 to-yellow-600",
+//     description: "HD anime with Vietnamese subtitles",
+//   },
+//   {
+//     name: "Zoro.to",
+//     url: "https://zoro.to/search?keyword=",
+//     icon: "🎭",
+//     color: "from-indigo-500 to-indigo-600",
+//     description: "High quality anime streaming",
+//   },
+// ];
 
 export default function StreamingModal({
   isOpen,
   onClose,
   animeTitle,
 }: StreamingModalProps) {
-  const handlePlatformClick = (platform: StreamingPlatform) => {
-    const searchQuery = encodeURIComponent(animeTitle);
-    window.open(platform.url + searchQuery, "_blank");
-  };
+  //   const handlePlatformClick = (platform: StreamingPlatform) => {
+  //     const searchQuery = encodeURIComponent(animeTitle);
+  //     window.open(platform.url + searchQuery, "_blank");
+  //   };
 
   return (
     <AnimatePresence>
@@ -126,18 +126,41 @@ export default function StreamingModal({
                   <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 </button>
               </div>
-            </div>
-
+            </div>{" "}
             {/* Platforms Grid */}
             <div className="p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* No Direct Streaming Notice */}
+              <motion.div
+                className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-blue-500 rounded-lg">
+                    <Tv className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-blue-800 dark:text-blue-200">
+                      Direct Streaming Not Available
+                    </h3>
+                    <p className="text-sm text-blue-600 dark:text-blue-300">
+                      We don&#39;t support direct streaming right now. This
+                      feature will be available in future updates.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Hidden streaming platforms section */}
+              {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {streamingPlatforms.map((platform, index) => (
                   <motion.button
                     key={platform.name}
                     className="group relative p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-transparent hover:shadow-lg transition-all duration-200 text-left"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: 0.2 + index * 0.1 }}
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => handlePlatformClick(platform)}
@@ -163,20 +186,19 @@ export default function StreamingModal({
                     </div>
                   </motion.button>
                 ))}
-              </div>
+              </div> */}
 
-              {/* Disclaimer */}
+              {/* Updated Disclaimer */}
               <motion.div
                 className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.3 }}
               >
                 <p className="text-sm text-amber-800 dark:text-amber-200">
-                  <span className="font-semibold">Note:</span> Availability may
-                  vary by region. Some platforms may require subscription or
-                  have geo-restrictions. We recommend using legal streaming
-                  services.
+                  <span className="font-semibold">Coming Soon:</span> We&#39;re
+                  working on integrating direct streaming capabilities. Thank
+                  you for your patience!
                 </p>
               </motion.div>
             </div>

@@ -258,9 +258,12 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                   transition={{ delay: index * 0.05 }}
                   className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
+                  {" "}
                   <div className="relative aspect-video overflow-hidden">
                     <Image
-                      src={episode.images.jpg.image_url}
+                      src={
+                        episode.images?.jpg?.image_url || "/404-not-found.jpg"
+                      }
                       alt={episode.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -275,12 +278,12 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                       <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg"
+                        className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg"
                       >
-                        <ExternalLink className="w-6 h-6" />
+                        <ExternalLink className="w-3 h-3" />
                       </motion.div>
                     </a>
-                    <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 rounded-lg text-xs font-semibold">
+                    <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-semibold">
                       EP {episode.episode}
                     </div>
                   </div>
