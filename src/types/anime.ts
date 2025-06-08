@@ -15,6 +15,7 @@ export interface Anime {
       large_image_url?: string;
     };
   };
+  type?: string;
   synopsis?: string;
   score?: number;
   scored_by?: number;

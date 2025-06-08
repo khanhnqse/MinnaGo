@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const {
@@ -130,8 +131,7 @@ export default function Home() {
                   <p className="text-xl text-white/90 mb-8 leading-relaxed drop-shadow-lg">
                     Discover, explore, and dive into the magical world of anime.
                     Find your next favorite series from thousands of titles.
-                  </p>
-
+                  </p>{" "}
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 mb-8">
                     <motion.button
@@ -149,8 +149,17 @@ export default function Home() {
                     >
                       Browse Collection
                     </motion.button>
-                  </div>
 
+                    <Link href="/rankings">
+                      <motion.button
+                        className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        🏆 Top Rankings
+                      </motion.button>
+                    </Link>
+                  </div>
                   {/* Image indicators */}
                   <div className="flex gap-2">
                     {backgroundImages.map((_, index) => (

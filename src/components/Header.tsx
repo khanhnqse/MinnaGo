@@ -48,6 +48,12 @@ export default function Header() {
               Popular
             </Link>
             <Link
+              href="/rankings"
+              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+            >
+              Rankings
+            </Link>
+            <Link
               href="/simulcast"
               className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
