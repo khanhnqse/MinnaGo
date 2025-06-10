@@ -181,8 +181,7 @@ export default function Home() {
         </div>
         {/* Search Section */}
         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-purple-200 dark:border-purple-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <motion.div
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -191,44 +190,34 @@ export default function Home() {
                 value={query}
                 onChange={setQuery}
                 onSearch={triggerSearch}
-                placeholder="Search thousands of anime..."
+                placeholder="Search for anime titles, genres, or studios..."
               />
-            </motion.div>
 
-            {/* Quick Access Tags */}
-            <motion.div
-              className="mt-6 flex flex-wrap gap-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              <span className="text-sm text-gray-500 dark:text-gray-400 mr-2 flex items-center">
-                Popular Now:
-              </span>
-              {[
-                "One Piece",
-                "Demon Slayer",
-                "Attack on Titan",
-                "Your Name",
-                "Jujutsu Kaisen",
-                "Chainsaw Man",
-              ].map((suggestion, index) => (
-                <motion.button
-                  key={suggestion}
-                  onClick={() => {
-                    setQuery(suggestion);
-                    triggerSearch();
-                  }}
-                  className="text-sm bg-white/70 dark:bg-gray-800/70 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:text-white border border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-300 px-4 py-2 rounded-full transition-all duration-300 font-medium backdrop-blur-sm"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                >
-                  {suggestion}
-                </motion.button>
-              ))}
+              {/* Quick Search Suggestions */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-wrap justify-center gap-3 mt-6"
+              >                {['One Piece', 'Demon Slayer', 'Attack on Titan', 'Your Name', 'Jujutsu Kaisen'].map((suggestion, index) => (
+                  <motion.button
+                    key={suggestion}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setQuery(suggestion);
+                      // Trigger search immediately with the suggestion
+                      searchByCategory(suggestion);
+                    }}
+                    className="px-4 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-all duration-200 border border-purple-200 dark:border-purple-700/50"
+                  >
+                    {suggestion}
+                  </motion.button>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
         </div>
