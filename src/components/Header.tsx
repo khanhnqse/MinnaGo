@@ -36,34 +36,23 @@ export default function Header() {
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
-              href="/browse/new"
-              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
-            >
-              New
-            </Link>
-            <Link
-              href="/browse/popular"
-              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
-            >
-              Popular
-            </Link>
-            <Link
               href="/rankings"
               className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Rankings
             </Link>
-            <Link
-              href="/simulcast"
-              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
-            >
-              Simulcast
-            </Link>
+
             <Link
               href="/enhanced"
               className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Enhanced
+            </Link>
+            <Link
+              href="/manga"
+              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+            >
+              Manga
             </Link>
           </nav>{" "}
           {/* Right side */}
