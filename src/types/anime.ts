@@ -103,6 +103,15 @@ export interface VideoPromo {
   trailer: AnimeTrailer;
 }
 
+export interface VideoMusicVideo {
+  title: string;
+  video: AnimeTrailer;
+  meta?: {
+    title?: string;
+    author?: string;
+  };
+}
+
 export interface VideoEpisode {
   mal_id: number;
   title: string;
@@ -119,7 +128,7 @@ export interface AnimeVideosResponse {
   data: {
     promo: VideoPromo[];
     episodes: VideoEpisode[];
-    music_videos: VideoPromo[];
+    music_videos: VideoMusicVideo[];
   };
 }
 

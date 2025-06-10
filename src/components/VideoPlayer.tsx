@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { VideoPromo, VideoEpisode } from "@/types/anime";
+import { VideoPromo, VideoEpisode, VideoMusicVideo } from "@/types/anime";
 import { Play, X, ExternalLink, Youtube, Music, Tv } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -10,7 +10,7 @@ interface VideoPlayerProps {
   videos: {
     promo: VideoPromo[];
     episodes: VideoEpisode[];
-    music_videos: VideoPromo[];
+    music_videos: VideoMusicVideo[];
   };
 }
 
@@ -346,14 +346,13 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                 </motion.div>
               ))}
             </div>
-          )}{" "}
-          {/* Music Videos */}
+          )}{" "}          {/* Music Videos */}
           {activeTab === "music" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.music_videos
                 .map((video, index) => {
                   // Add defensive checks for video structure
-                  if (!video || !video.trailer) {
+                  if (!video || !video.video) {
                     console.warn(
                       `Music video ${index} has invalid structure:`,
                       video
@@ -364,7 +363,7 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                   return (
                     <motion.div
                       key={`music-${
-                        video.trailer.youtube_id || video.title || index
+                        video.video.youtube_id || video.title || index
                       }`}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -372,9 +371,9 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                       className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
                     >
                       <div className="relative aspect-video overflow-hidden">
-                        {video.trailer.images?.large_image_url ? (
+                        {video.video.images?.large_image_url ? (
                           <Image
-                            src={video.trailer.images.large_image_url}
+                            src={video.video.images.large_image_url}
                             alt={video.title || "Music Video"}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -393,8 +392,8 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
                         <button
                           onClick={() => {
-                            if (video.trailer?.embed_url) {
-                              openVideo(video.trailer.embed_url);
+                            if (video.video?.embed_url) {
+                              openVideo(video.video.embed_url);
                             } else {
                               console.warn(
                                 "No embed URL available for music video:",
@@ -424,9 +423,9 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                           <span className="text-sm text-gray-600 dark:text-gray-400">
                             Music Video
                           </span>
-                          {video.trailer?.url && (
+                          {video.video?.url && (
                             <a
-                              href={video.trailer.url}
+                              href={video.video.url}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-purple-500 hover:text-purple-600 transition-colors"
