@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { VideoPromo, VideoEpisode } from "@/types/anime";
 import { Play, X, ExternalLink, Youtube, Music, Tv } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 interface VideoPlayerProps {
@@ -19,8 +19,17 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
   const [activeTab, setActiveTab] = useState<"promo" | "episodes" | "music">(
     "promo"
   );
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const openVideo = (embedUrl: string) => {
+    if (!embedUrl || typeof embedUrl !== "string") {
+      console.error("Invalid embed URL provided:", embedUrl);
+      return;
+    }
+    console.log("Opening video with URL:", embedUrl);
     setSelectedVideo(embedUrl);
   };
 
@@ -53,7 +62,6 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
     videos.promo.length > 0 ||
     videos.episodes.length > 0 ||
     videos.music_videos.length > 0;
-
   if (!hasVideos) {
     return (
       <motion.div
@@ -78,6 +86,20 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
           </p>
         </div>
       </motion.div>
+    );
+  }
+
+  // Prevent hydration issues by not rendering complex content until client-side
+  if (!isClient) {
+    return (
+      <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-xl">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4 animate-pulse" />
+          <h3 className="text-xl font-bold text-gray-600 dark:text-gray-400 mb-2">
+            Loading Videos...
+          </h3>
+        </div>
+      </div>
     );
   }
 
@@ -184,67 +206,96 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
           {/* Promo Videos */}
           {activeTab === "promo" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.promo.map((video, index) => (
-                <motion.div
-                  key={`promo-${
-                    video.trailer.youtube_id || video.title || index
-                  }`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
-                >
-                  <div className="relative aspect-video overflow-hidden">
-                    {video.trailer.images?.large_image_url && (
-                      <Image
-                        src={video.trailer.images.large_image_url}
-                        alt={video.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
-                    <button
-                      onClick={() =>
-                        video.trailer.embed_url &&
-                        openVideo(video.trailer.embed_url)
-                      }
-                      className="absolute inset-0 flex items-center justify-center"
+              {videos.promo
+                .map((video, index) => {
+                  // Add defensive checks for video structure
+                  if (!video || !video.trailer) {
+                    console.warn(
+                      `Promo video ${index} has invalid structure:`,
+                      video
+                    );
+                    return null;
+                  }
+
+                  return (
+                    <motion.div
+                      key={`promo-${
+                        video.trailer.youtube_id || video.title || index
+                      }`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
                     >
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg"
-                      >
-                        <Play className="w-8 h-8 ml-1" />
-                      </motion.div>
-                    </button>
-                    <div className="absolute top-3 right-3">
-                      <Youtube className="w-6 h-6 text-red-500" />
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                      {video.title}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        Trailer
-                      </span>
-                      {video.trailer.url && (
-                        <a
-                          href={video.trailer.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-red-500 hover:text-red-600 transition-colors"
+                      <div className="relative aspect-video overflow-hidden">
+                        {video.trailer.images?.large_image_url ? (
+                          <Image
+                            src={video.trailer.images.large_image_url}
+                            alt={video.title || "Trailer"}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              console.error(
+                                "Failed to load promo video image:",
+                                e
+                              );
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center">
+                            <Play className="w-16 h-16 text-white/50" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
+                        <button
+                          onClick={() => {
+                            if (video.trailer?.embed_url) {
+                              openVideo(video.trailer.embed_url);
+                            } else {
+                              console.warn(
+                                "No embed URL available for promo video:",
+                                video
+                              );
+                            }
+                          }}
+                          className="absolute inset-0 flex items-center justify-center"
                         >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-lg"
+                          >
+                            <Play className="w-8 h-8 ml-1" />
+                          </motion.div>
+                        </button>
+                        <div className="absolute top-3 right-3">
+                          <Youtube className="w-6 h-6 text-red-500" />
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                          {video.title || "Untitled Trailer"}
+                        </h3>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            Trailer
+                          </span>
+                          {video.trailer?.url && (
+                            <a
+                              href={video.trailer.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-red-500 hover:text-red-600 transition-colors"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })
+                .filter(Boolean)}
             </div>
           )}{" "}
           {/* Episodes */}
@@ -299,67 +350,96 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
           {/* Music Videos */}
           {activeTab === "music" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.music_videos.map((video, index) => (
-                <motion.div
-                  key={`music-${
-                    video.trailer.youtube_id || video.title || index
-                  }`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
-                >
-                  <div className="relative aspect-video overflow-hidden">
-                    {video.trailer.images?.large_image_url && (
-                      <Image
-                        src={video.trailer.images.large_image_url}
-                        alt={video.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
-                    <button
-                      onClick={() =>
-                        video.trailer.embed_url &&
-                        openVideo(video.trailer.embed_url)
-                      }
-                      className="absolute inset-0 flex items-center justify-center"
+              {videos.music_videos
+                .map((video, index) => {
+                  // Add defensive checks for video structure
+                  if (!video || !video.trailer) {
+                    console.warn(
+                      `Music video ${index} has invalid structure:`,
+                      video
+                    );
+                    return null;
+                  }
+
+                  return (
+                    <motion.div
+                      key={`music-${
+                        video.trailer.youtube_id || video.title || index
+                      }`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
                     >
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-full shadow-lg"
-                      >
-                        <Music className="w-8 h-8" />
-                      </motion.div>
-                    </button>
-                    <div className="absolute top-3 right-3">
-                      <Music className="w-6 h-6 text-purple-500" />
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                      {video.title}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        Music Video
-                      </span>
-                      {video.trailer.url && (
-                        <a
-                          href={video.trailer.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-500 hover:text-purple-600 transition-colors"
+                      <div className="relative aspect-video overflow-hidden">
+                        {video.trailer.images?.large_image_url ? (
+                          <Image
+                            src={video.trailer.images.large_image_url}
+                            alt={video.title || "Music Video"}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              console.error(
+                                "Failed to load music video image:",
+                                e
+                              );
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                            <Music className="w-16 h-16 text-white/50" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
+                        <button
+                          onClick={() => {
+                            if (video.trailer?.embed_url) {
+                              openVideo(video.trailer.embed_url);
+                            } else {
+                              console.warn(
+                                "No embed URL available for music video:",
+                                video
+                              );
+                            }
+                          }}
+                          className="absolute inset-0 flex items-center justify-center"
                         >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-full shadow-lg"
+                          >
+                            <Music className="w-8 h-8" />
+                          </motion.div>
+                        </button>
+                        <div className="absolute top-3 right-3">
+                          <Music className="w-6 h-6 text-purple-500" />
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                          {video.title || "Untitled Music Video"}
+                        </h3>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            Music Video
+                          </span>
+                          {video.trailer?.url && (
+                            <a
+                              href={video.trailer.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-purple-500 hover:text-purple-600 transition-colors"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })
+                .filter(Boolean)}
             </div>
           )}
           {/* Empty State for Active Tab */}

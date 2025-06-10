@@ -164,11 +164,10 @@ export default function AnimeDetailPage() {
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Genres
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {anime.genres.map((genre) => (
+                  </h3>                  <div className="flex flex-wrap gap-2">
+                    {anime.genres.map((genre, index) => (
                       <span
-                        key={genre.mal_id}
+                        key={`${genre.mal_id}-${index}`}
                         className="inline-block bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full border border-pink-200 dark:border-pink-700/50 font-medium text-sm hover:scale-105 transition-transform duration-200 cursor-default"
                       >
                         {genre.name}

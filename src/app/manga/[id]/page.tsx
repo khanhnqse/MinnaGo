@@ -327,11 +327,11 @@ export default function MangaDetailPage() {
                 >
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Authors
-                  </h3>
+                  </h3>{" "}
                   <div className="flex flex-wrap gap-2">
                     {manga.authors.map((author, index) => (
                       <motion.span
-                        key={author.mal_id}
+                        key={`${author.mal_id}-${index}`}
                         className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-700/50 font-medium text-sm transition-transform duration-200 cursor-default"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -358,11 +358,11 @@ export default function MangaDetailPage() {
                 >
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Genres
-                  </h3>
+                  </h3>{" "}
                   <div className="flex flex-wrap gap-2">
                     {manga.genres.map((genre, index) => (
                       <motion.span
-                        key={genre.mal_id}
+                        key={`${genre.mal_id}-${index}`}
                         className="inline-block bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full border border-pink-200 dark:border-pink-700/50 font-medium text-sm transition-transform duration-200 cursor-default"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -385,11 +385,11 @@ export default function MangaDetailPage() {
                 >
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Themes
-                  </h3>
+                  </h3>{" "}
                   <div className="flex flex-wrap gap-2">
                     {manga.themes.map((theme, index) => (
                       <motion.span
-                        key={theme.mal_id}
+                        key={`${theme.mal_id}-${index}`}
                         className="inline-block bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-indigo-900/30 dark:to-blue-900/30 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-full border border-indigo-200 dark:border-indigo-700/50 font-medium text-sm transition-transform duration-200 cursor-default"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -415,11 +415,11 @@ export default function MangaDetailPage() {
                 >
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Demographics
-                  </h3>
+                  </h3>{" "}
                   <div className="flex flex-wrap gap-2">
                     {manga.demographics.map((demographic, index) => (
                       <motion.span
-                        key={demographic.mal_id}
+                        key={`${demographic.mal_id}-${index}`}
                         className="inline-block bg-gradient-to-r from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 text-emerald-700 dark:text-emerald-300 px-4 py-2 rounded-full border border-emerald-200 dark:border-emerald-700/50 font-medium text-sm transition-transform duration-200 cursor-default"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -445,11 +445,11 @@ export default function MangaDetailPage() {
                 >
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Serializations
-                  </h3>
+                  </h3>{" "}
                   <div className="flex flex-wrap gap-2">
                     {manga.serializations.map((serialization, index) => (
                       <motion.span
-                        key={serialization.mal_id}
+                        key={`${serialization.mal_id}-${index}`}
                         className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-100 to-amber-100 dark:from-orange-900/30 dark:to-amber-900/30 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full border border-orange-200 dark:border-orange-700/50 font-medium text-sm transition-transform duration-200 cursor-default"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
