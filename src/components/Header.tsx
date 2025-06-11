@@ -57,15 +57,17 @@ export default function Header() {
           </nav>{" "}
           {/* Right side */}
           <div className="flex items-center space-x-4">
+            {" "}
             {/* Premium Button */}
-            <motion.button
-              className="hidden sm:block bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-md text-sm transition-all duration-300 shadow-lg shadow-purple-500/30"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              ✨ Try Premium
-            </motion.button>
-
+            <Link href="/premium">
+              <motion.button
+                className="hidden sm:block bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-4 py-2 rounded-md text-sm transition-all duration-300 shadow-lg shadow-purple-500/30"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                ✨ Try Premium
+              </motion.button>
+            </Link>
             {/* Search Icon */}
             <motion.button
               className="p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
@@ -74,7 +76,6 @@ export default function Header() {
             >
               <Search className="w-5 h-5" />
             </motion.button>
-
             {/* User Icon */}
             <motion.button
               className="p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
@@ -83,7 +84,6 @@ export default function Header() {
             >
               <User className="w-5 h-5" />
             </motion.button>
-
             {/* Theme Toggle */}
             <motion.div
               whileHover={{ scale: 1.1, rotate: 180 }}
@@ -92,7 +92,6 @@ export default function Header() {
             >
               <ThemeToggle />
             </motion.div>
-
             {/* Mobile Menu */}
             <motion.button
               className="md:hidden p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
