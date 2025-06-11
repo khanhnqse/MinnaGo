@@ -75,15 +75,17 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
             >
               <Search className="w-5 h-5" />
-            </motion.button>
+            </motion.button>{" "}
             {/* User Icon */}
-            <motion.button
-              className="p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <User className="w-5 h-5" />
-            </motion.button>
+            <Link href="/profile">
+              <motion.button
+                className="p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <User className="w-5 h-5" />
+              </motion.button>
+            </Link>
             {/* Theme Toggle */}
             <motion.div
               whileHover={{ scale: 1.1, rotate: 180 }}
