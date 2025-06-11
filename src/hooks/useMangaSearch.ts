@@ -3,26 +3,34 @@
 import { useState, useEffect } from "react";
 import { MangaApiResponse } from "@/types/anime";
 
-export function useMangaSearch(query: string, page: number = 1) {
+export function useMangaSearch(query: string, page: number = 1, genreId?: string) {
   const [manga, setManga] = useState<MangaApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const searchManga = async (searchQuery: string, searchPage: number = 1) => {
-    if (!searchQuery.trim()) {
-      setManga(null);
-      return;
-    }
-
+  const searchManga = async (searchQuery: string, searchPage: number = 1, genre?: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(
-        `https://api.jikan.moe/v4/manga?q=${encodeURIComponent(
-          searchQuery
-        )}&page=${searchPage}&limit=20`
-      );
+      let url = `https://api.jikan.moe/v4/manga?page=${searchPage}&limit=20`;
+      
+      // Add search query if provided
+      if (searchQuery.trim()) {
+        url += `&q=${encodeURIComponent(searchQuery)}`;
+      }
+      
+      // Add genre filter if provided and not "all"
+      if (genre && genre !== "all") {
+        url += `&genres=${genre}`;
+      }
+
+      // If no search query and no genre filter, get top manga
+      if (!searchQuery.trim() && (!genre || genre === "all")) {
+        url = `https://api.jikan.moe/v4/top/manga?page=${searchPage}&limit=20`;
+      }
+
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -50,15 +58,10 @@ export function useMangaSearch(query: string, page: number = 1) {
       setLoading(false);
     }
   };
-
   useEffect(() => {
-    if (query.trim()) {
-      searchManga(query, page);
-    } else {
-      setManga(null);
-      setError(null);
-    }
-  }, [query, page]);
+    searchManga(query, page, genreId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, page, genreId]);
 
   return {
     manga,

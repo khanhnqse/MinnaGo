@@ -47,13 +47,12 @@ export default function MangaPage() {
     return () => clearInterval(interval);
   }, [backgroundImages.length]);
   // No automatic debounced search - only trigger on button click
-
   // Use hooks for data fetching
   const {
     manga: searchResults,
     loading: searchLoading,
     error: searchError,
-  } = useMangaSearch(debouncedQuery, currentPage);
+  } = useMangaSearch(debouncedQuery, currentPage, activeCategory);
 
   const {
     manga: topManga,
@@ -68,10 +67,16 @@ export default function MangaPage() {
       setCurrentPage(1);
     }
   };
-
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
     setCurrentPage(1);
+    // If we have a search query, keep showing search results
+    // If no search query, show top manga for "all" or filtered results for specific category
+    if (!debouncedQuery.trim() && category === "all") {
+      setShowTopManga(true);
+    } else {
+      setShowTopManga(false);
+    }
   };
 
   const currentResults = showTopManga ? topManga : searchResults;
