@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, Search, User, Menu } from "lucide-react";
+import { Search, User, Menu } from "lucide-react";
+import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
@@ -14,16 +15,21 @@ export default function Header() {
       className="bg-gradient-to-r from-white/95 to-gray-100/95 dark:from-purple-900/90 dark:to-pink-900/90 backdrop-blur-md border-b border-gray-200/50 dark:border-purple-500/20 sticky top-0 z-50 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+        <div className="flex justify-between items-center h-16">          {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/30">
-                <Sparkles className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/30 dark:shadow-purple-500/50">
+                <Image
+                  src="/bilibili.svg"
+                  alt="MinnaGo Logo"
+                  width={20}
+                  height={20}
+                  className="text-white filter brightness-0 invert"
+                />
               </div>
               {/* Magical sparkles around logo */}
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-pink-400 rounded-full opacity-60 animate-pulse"></div>
