@@ -152,7 +152,7 @@ export default function SettingsPage() {
     <AuthGuard requireAuth={true}>
       <>
         <Header />
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
+        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 dark:from-gray-900 dark:via-black dark:to-gray-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Header */}
             <motion.div
@@ -161,21 +161,20 @@ export default function SettingsPage() {
               transition={{ duration: 0.6 }}
               className="mb-8"
             >
-              <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-                <Settings className="w-8 h-8 text-purple-400" />
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+                <Settings className="w-8 h-8 text-purple-600 dark:text-purple-400" />
                 Settings
               </h1>
-              <p className="text-purple-200">
+              <p className="text-gray-700 dark:text-purple-200">
                 Manage your account preferences and privacy settings
               </p>
-            </motion.div>
-
+            </motion.div>{" "}
             {/* User Info Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20"
+              className="bg-white/80 dark:bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-gray-200/50 dark:border-white/20"
             >
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 p-0.5">
@@ -186,22 +185,25 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-bold text-white">{user?.name}</h2>
-                  <p className="text-purple-200">{user?.email}</p>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                    {user?.name}
+                  </h2>
+                  <p className="text-gray-600 dark:text-purple-200">
+                    {user?.email}
+                  </p>
                   <div className="flex items-center gap-2 mt-1">
                     {user?.isPremium && (
                       <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full text-xs font-bold">
                         Premium
                       </span>
                     )}
-                    <span className="text-purple-300 text-sm">
+                    <span className="text-gray-500 dark:text-purple-300 text-sm">
                       Member since {user?.joinDate}
                     </span>
                   </div>
                 </div>
               </div>
-            </motion.div>
-
+            </motion.div>{" "}
             {/* Settings Categories */}
             <div className="space-y-6">
               {settingsCategories.map((category, index) => (
@@ -210,31 +212,33 @@ export default function SettingsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 * (index + 3) }}
-                  className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden"
+                  className="bg-white/80 dark:bg-white/10 backdrop-blur-md rounded-2xl border border-gray-200/50 dark:border-white/20 overflow-hidden"
                 >
                   <div className="p-6">
-                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-3">
-                      <div className="text-purple-400">{category.icon}</div>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
+                      <div className="text-purple-600 dark:text-purple-400">
+                        {category.icon}
+                      </div>
                       {category.title}
                     </h3>
                     <div className="space-y-2">
                       {category.items.map((item, itemIndex) => (
                         <motion.div
                           key={itemIndex}
-                          className="bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 cursor-pointer group"
+                          className="bg-gray-100/50 dark:bg-white/5 rounded-xl p-4 hover:bg-gray-200/50 dark:hover:bg-white/10 transition-all duration-300 cursor-pointer group"
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.99 }}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
-                              <h4 className="text-white font-medium group-hover:text-purple-200 transition-colors">
+                              <h4 className="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-200 transition-colors">
                                 {item.label}
                               </h4>
-                              <p className="text-purple-300 text-sm mt-1">
+                              <p className="text-gray-600 dark:text-purple-300 text-sm mt-1">
                                 {item.description}
                               </p>
                             </div>
-                            <ChevronRight className="w-5 h-5 text-purple-400 group-hover:text-pink-400 transition-colors" />
+                            <ChevronRight className="w-5 h-5 text-purple-600 dark:text-purple-400 group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors" />
                           </div>
                         </motion.div>
                       ))}
@@ -242,8 +246,7 @@ export default function SettingsPage() {
                   </div>
                 </motion.div>
               ))}
-            </div>
-
+            </div>{" "}
             {/* Save Button */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -252,7 +255,7 @@ export default function SettingsPage() {
               className="mt-8 text-center"
             >
               <motion.button
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 mx-auto shadow-lg shadow-purple-500/30"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 mx-auto shadow-lg shadow-purple-500/30 dark:shadow-purple-500/20"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
