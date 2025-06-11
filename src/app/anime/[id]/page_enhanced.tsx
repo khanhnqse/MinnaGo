@@ -198,7 +198,7 @@ export default function AnimeDetailPage() {
 
                 {/* Floating action buttons */}
                 <motion.div
-                  className="absolute bottom-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="text-black absolute bottom-4 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
@@ -207,21 +207,23 @@ export default function AnimeDetailPage() {
                     onClick={handleFavorite}
                     className={`backdrop-blur-sm p-3 rounded-full shadow-lg transition-all duration-200 ${
                       isFavorite
-                        ? "bg-red-500 text-white"
-                        : "bg-white/90 dark:bg-gray-900/90 hover:bg-red-500 hover:text-white"
+                        ? "bg-red-500 text-black"
+                        : "bg-white/90 dark:bg-gray-900/90 hover:bg-red-500 hover:text-white text-black"
                     }`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
                     <Heart
-                      className={`h-5 w-5 ${isFavorite ? "fill-current" : ""}`}
+                      className={`h-5 w-5 text-black ${
+                        isFavorite ? "fill-current" : ""
+                      }`}
                     />
                   </motion.button>
                   <motion.button
                     onClick={handleBookmark}
-                    className={`backdrop-blur-sm p-3 rounded-full shadow-lg transition-all duration-200 ${
+                    className={`backdrop-blur-sm text-black p-3 rounded-full shadow-lg transition-all duration-200 ${
                       isBookmarked
-                        ? "bg-blue-500 text-white"
+                        ? "bg-blue-500 text-black"
                         : "bg-white/90 dark:bg-gray-900/90 hover:bg-blue-500 hover:text-white"
                     }`}
                     whileHover={{ scale: 1.1 }}
@@ -424,7 +426,8 @@ export default function AnimeDetailPage() {
                 >
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     Genres
-                  </h3>                  <div className="flex flex-wrap gap-2">
+                  </h3>{" "}
+                  <div className="flex flex-wrap gap-2">
                     {anime.genres.map((genre, index) => (
                       <motion.span
                         key={`${genre.mal_id}-${index}`}

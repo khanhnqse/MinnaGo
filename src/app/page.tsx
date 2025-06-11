@@ -180,8 +180,10 @@ export default function Home() {
           </div>
         </div>
         {/* Search Section */}
-        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-purple-200 dark:border-purple-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">            <motion.div
+        <div className="text-black bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-t border-purple-200 dark:border-purple-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {" "}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -199,7 +201,15 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 className="flex flex-wrap justify-center gap-3 mt-6"
-              >                {['One Piece', 'Demon Slayer', 'Attack on Titan', 'Your Name', 'Jujutsu Kaisen'].map((suggestion, index) => (
+              >
+                {" "}
+                {[
+                  "One Piece",
+                  "Demon Slayer",
+                  "Attack on Titan",
+                  "Your Name",
+                  "Jujutsu Kaisen",
+                ].map((suggestion, index) => (
                   <motion.button
                     key={suggestion}
                     initial={{ opacity: 0, scale: 0 }}
