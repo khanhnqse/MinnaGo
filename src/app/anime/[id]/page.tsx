@@ -366,7 +366,8 @@ export default function AnimeDetailPage() {
                     Videos & Trailers
                   </h3>
                   <VideoPlayer videos={videos} />
-                </motion.div>              )}
+                </motion.div>
+              )}
               {/* Reviews Section */}
               <ReviewsSection
                 reviews={reviews || []}

@@ -34,7 +34,6 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-blue-400/10 to-cyan-400/10 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
       {/* Review Header */}
       <div className="flex items-start space-x-4 mb-6">
         <div className="relative flex-shrink-0">
@@ -72,19 +71,25 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
               )}
             </div>
             {review.scores?.overall && (
-              <div className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl font-bold ${getScoreBg(review.scores.overall)} ${getScoreColor(review.scores.overall)}`}>
+              <div
+                className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl font-bold ${getScoreBg(
+                  review.scores.overall
+                )} ${getScoreColor(review.scores.overall)}`}
+              >
                 <Star className="h-4 w-4 fill-current" />
                 <span className="text-sm">{review.scores.overall}/10</span>
               </div>
             )}
           </div>
-          
+
           {/* Meta info */}
           <div className="flex items-center space-x-4 text-sm">
             {review.episodes_watched && (
               <div className="flex items-center space-x-1 text-blue-600 dark:text-blue-400">
                 <Eye className="h-4 w-4" />
-                <span className="font-medium">{review.episodes_watched} eps</span>
+                <span className="font-medium">
+                  {review.episodes_watched} eps
+                </span>
               </div>
             )}
             {review.reactions?.overall && (
@@ -95,20 +100,31 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
             )}
             <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
               <Calendar className="h-4 w-4" />
-              <span>{new Date(review.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+              <span>
+                {new Date(review.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
             </div>
           </div>
         </div>
-      </div>      {/* Review Content */}
+      </div>{" "}
+      {/* Review Content */}
       <div className="mb-6">
         <div className="relative">
-          <div className="absolute -left-2 top-0 w-1 h-full bg-gradient-to-b from-purple-400 to-pink-400 rounded-full opacity-60" />          <blockquote className="pl-6 text-gray-700 dark:text-gray-300 leading-relaxed text-base font-medium italic">
-            &ldquo;{review.review.length > 280
+          <div className="absolute -left-2 top-0 w-1 h-full bg-gradient-to-b from-purple-400 to-pink-400 rounded-full opacity-60" />{" "}
+          <blockquote className="pl-6 text-gray-700 dark:text-gray-300 leading-relaxed text-base font-medium italic">
+            &ldquo;
+            {review.review.length > 280
               ? `${review.review.substring(0, 280)}...`
-              : review.review}&rdquo;
+              : review.review}
+            &rdquo;
           </blockquote>
         </div>
-      </div>      {/* Review Scores */}
+      </div>{" "}
+      {/* Review Scores */}
       {review.scores && (
         <div className="mb-6">
           <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
@@ -117,15 +133,40 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
           </h5>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {[
-              { key: 'story', label: 'Story', icon: '📚', color: 'from-blue-500 to-cyan-500' },
-              { key: 'animation', label: 'Animation', icon: '🎨', color: 'from-purple-500 to-pink-500' },
-              { key: 'sound', label: 'Sound', icon: '🎵', color: 'from-green-500 to-emerald-500' },
-              { key: 'character', label: 'Character', icon: '👥', color: 'from-orange-500 to-red-500' },
-              { key: 'enjoyment', label: 'Enjoyment', icon: '😊', color: 'from-yellow-500 to-amber-500' }
+              {
+                key: "story",
+                label: "Story",
+                icon: "📚",
+                color: "from-blue-500 to-cyan-500",
+              },
+              {
+                key: "animation",
+                label: "Animation",
+                icon: "🎨",
+                color: "from-purple-500 to-pink-500",
+              },
+              {
+                key: "sound",
+                label: "Sound",
+                icon: "🎵",
+                color: "from-green-500 to-emerald-500",
+              },
+              {
+                key: "character",
+                label: "Character",
+                icon: "👥",
+                color: "from-orange-500 to-red-500",
+              },
+              {
+                key: "enjoyment",
+                label: "Enjoyment",
+                icon: "😊",
+                color: "from-yellow-500 to-amber-500",
+              },
             ].map(({ key, label, icon, color }) => {
               const score = review.scores[key as keyof typeof review.scores];
               if (!score) return null;
-              
+
               return (
                 <div key={key} className="relative group/score">
                   <div className={`bg-gradient-to-r ${color} p-0.5 rounded-xl`}>
@@ -138,15 +179,27 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
                           </span>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <div className={`w-2 h-2 rounded-full ${getScoreColor(score).includes('green') ? 'bg-green-400' : getScoreColor(score).includes('yellow') ? 'bg-yellow-400' : 'bg-red-400'}`} />
-                          <span className={`text-sm font-bold ${getScoreColor(score)}`}>
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              getScoreColor(score).includes("green")
+                                ? "bg-green-400"
+                                : getScoreColor(score).includes("yellow")
+                                ? "bg-yellow-400"
+                                : "bg-red-400"
+                            }`}
+                          />
+                          <span
+                            className={`text-sm font-bold ${getScoreColor(
+                              score
+                            )}`}
+                          >
                             {score}
                           </span>
                         </div>
                       </div>
                       {/* Score bar */}
                       <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                        <div 
+                        <div
                           className={`h-1.5 rounded-full bg-gradient-to-r ${color} transition-all duration-500 ease-out`}
                           style={{ width: `${(score / 10) * 100}%` }}
                         />
@@ -158,7 +211,8 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
             })}
           </div>
         </div>
-      )}      {/* Footer with Actions */}
+      )}{" "}
+      {/* Footer with Actions */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
         <div className="flex items-center space-x-4">
           {/* Reaction buttons */}
@@ -177,13 +231,23 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
             </div>
           )}
         </div>
-        
+
         {/* Read more button */}
         {review.review.length > 280 && (
           <button className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium transition-colors duration-200 flex items-center space-x-1 group">
             <span>Read more</span>
-            <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
         )}

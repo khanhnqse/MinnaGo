@@ -291,7 +291,11 @@ export default function AnimeGrid({
               boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
             }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
           >
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/0"

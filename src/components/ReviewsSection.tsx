@@ -24,10 +24,16 @@ export default function ReviewsSection({
   }
 
   // Calculate average score from reviews
-  const reviewsWithScores = reviews.filter(review => review.scores?.overall);
-  const averageScore = reviewsWithScores.length > 0 
-    ? (reviewsWithScores.reduce((sum, review) => sum + (review.scores?.overall || 0), 0) / reviewsWithScores.length).toFixed(1)
-    : null;
+  const reviewsWithScores = reviews.filter((review) => review.scores?.overall);
+  const averageScore =
+    reviewsWithScores.length > 0
+      ? (
+          reviewsWithScores.reduce(
+            (sum, review) => sum + (review.scores?.overall || 0),
+            0
+          ) / reviewsWithScores.length
+        ).toFixed(1)
+      : null;
 
   return (
     <motion.div
@@ -51,16 +57,19 @@ export default function ReviewsSection({
                 Community Reviews
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {reviews.length} review{reviews.length !== 1 ? 's' : ''} from the community
+                {reviews.length} review{reviews.length !== 1 ? "s" : ""} from
+                the community
               </p>
             </div>
           </div>
-          
+
           {/* Average Score Display */}
           {averageScore && (
             <div className="flex items-center space-x-3">
               <div className="text-right">
-                <div className="text-sm text-gray-500 dark:text-gray-400">Avg Rating</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Avg Rating
+                </div>
                 <div className="flex items-center space-x-1">
                   <Star className="h-5 w-5 text-yellow-500 fill-current" />
                   <span className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -72,21 +81,23 @@ export default function ReviewsSection({
               <div className="w-px h-12 bg-gray-300 dark:bg-gray-600" />
               <div className="text-center">
                 <TrendingUp className="h-6 w-6 text-green-500 mx-auto mb-1" />
-                <div className="text-xs text-gray-500 dark:text-gray-400">Trending</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Trending
+                </div>
               </div>
             </div>
           )}
         </div>
-        
+
         {/* Decorative line */}
         <div className="mt-6 h-px bg-gradient-to-r from-transparent via-purple-300 dark:via-purple-700 to-transparent" />
-      </div>      {/* Reviews Grid */}
+      </div>{" "}
+      {/* Reviews Grid */}
       <div className="space-y-8">
         {reviews.slice(0, 3).map((review, index) => (
           <ReviewCard key={review.mal_id} review={review} index={index} />
         ))}
       </div>
-
       {/* Enhanced View All Button */}
       {reviews.length > 3 && (
         <motion.div
@@ -99,23 +110,25 @@ export default function ReviewsSection({
             className="group relative inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() =>
-              window.open(
-                `https://myanimelist.net/anime/${animeId}/reviews`,
-                "_blank"
-              )
-            }
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.open(
+                  `https://myanimelist.net/anime/${animeId}/reviews`,
+                  "_blank"
+                );
+              }
+            }}
           >
             {/* Animated background */}
             <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+
             {/* Button content */}
             <div className="relative flex items-center space-x-3">
               <MessageSquare className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
               <span>View All {reviews.length} Reviews on MAL</span>
               <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
             </div>
-            
+
             {/* Shine effect */}
             <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
           </motion.button>

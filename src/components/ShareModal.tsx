@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Share, X, Copy, Check, MessageCircle, Send } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -20,19 +20,28 @@ const ShareModal = ({
   isOpen,
   onClose,
   title,
-  url = window?.location?.href || "",
+  url = "",
   synopsis = "",
   onToast,
 }: ShareModalProps) => {
   const [copySuccess, setCopySuccess] = useState(false);
+  const [currentUrl, setCurrentUrl] = useState(url);
 
+  // Set the current URL on client side to avoid SSR issues
+  useEffect(() => {
+    if (typeof window !== "undefined" && !url) {
+      setCurrentUrl(window.location.href);
+    } else if (url) {
+      setCurrentUrl(url);
+    }
+  }, [url]);
   const handleNativeShare = async () => {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
           title: title,
           text: `Check out this amazing anime: ${title}`,
-          url: url,
+          url: currentUrl,
         });
         onToast("Shared successfully!");
         onClose();
@@ -44,10 +53,9 @@ const ShareModal = ({
       onToast("Native sharing not supported", "error");
     }
   };
-
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(currentUrl);
       setCopySuccess(true);
       onToast("Link copied to clipboard!");
       setTimeout(() => setCopySuccess(false), 2000);
@@ -56,9 +64,8 @@ const ShareModal = ({
       onToast("Failed to copy link", "error");
     }
   };
-
   const shareToSocial = (platform: string) => {
-    const encodedUrl = encodeURIComponent(url);
+    const encodedUrl = encodeURIComponent(currentUrl);
     const encodedTitle = encodeURIComponent(title);
     const encodedText = encodeURIComponent(
       `Check out this amazing anime: ${title}`
@@ -84,11 +91,15 @@ const ShareModal = ({
         break;
       case "discord":
         // For Discord, we'll copy a formatted message
-        const discordMessage = `🎌 **${title}**\n\n${
-          synopsis
-            ? synopsis.substring(0, 100) + "..."
-            : "Check out this amazing anime!"
-        }\n\n🔗 ${url}`;
+        const discordMessage = `🎌 **${title}**
+
+${
+  synopsis
+    ? synopsis.substring(0, 100) + "..."
+    : "Check out this amazing anime!"
+}
+
+🔗 ${currentUrl}`;
         navigator.clipboard
           .writeText(discordMessage)
           .then(() => {
@@ -101,9 +112,10 @@ const ShareModal = ({
       default:
         return;
     }
-
     if (shareUrl) {
-      window.open(shareUrl, "_blank", "width=600,height=400");
+      if (typeof window !== "undefined") {
+        window.open(shareUrl, "_blank", "width=600,height=400");
+      }
       onToast(`Opening ${platform} share...`);
     }
   };
