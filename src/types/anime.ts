@@ -227,3 +227,60 @@ export interface MangaApiResponse {
     };
   };
 }
+
+// Review Types
+export interface AnimeReview {
+  mal_id: number;
+  url: string;
+  type: string;
+  reactions: {
+    overall: number;
+    nice: number;
+    love_it: number;
+    funny: number;
+    confusing: number;
+    informative: number;
+    well_written: number;
+    creative: number;
+  };
+  date: string;
+  review: string;
+  episodes_watched: number;
+  scores: {
+    overall: number;
+    story: number;
+    animation: number;
+    sound: number;
+    character: number;
+    enjoyment: number;
+  };
+  tags: string[];
+  is_spoiler: boolean;
+  is_preliminary: boolean;
+  user: {
+    url: string;
+    username: string;
+    images: {
+      jpg: {
+        image_url: string;
+      };
+      webp: {
+        image_url: string;
+      };
+    };
+  };
+}
+
+export interface AnimeReviewsResponse {
+  data: AnimeReview[];
+  pagination: {
+    last_visible_page: number;
+    has_next_page: boolean;
+    current_page: number;
+    items: {
+      count: number;
+      total: number;
+      per_page: number;
+    };
+  };
+}

@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "homepage",
-        "videoPlayer"
+        "videoPlayer",
+        "animeReview"
     ]
 }
