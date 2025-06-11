@@ -4,8 +4,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-
 import Header from "@/components/Header";
+import AuthGuard from "@/components/AuthGuard";
+import { useAuth } from "@/contexts/AuthContext";
 
 import {
   Settings,
@@ -34,29 +35,35 @@ import {
 } from "lucide-react";
 
 export default function ProfilePage() {
-  // Mock user data - in real app this would come from authentication/database
-  const user = {
-    name: "Quang Khanh",
-    username: "@quang_khanh",
-    email: "quang.khanh@example.com",
-    bio: "Welcome to my anime and manga world! I love exploring new series and sharing my thoughts with fellow fans. Join me on this epic journey!",
-    avatar: "/man.png", // Using existing avatar from public folder
-    coverImage: "/34e2b8220213515.67bf12e77c4b6.jpg", // Using existing image
-    isPremium: true,
-    joinDate: "March 2020",
-    location: "Tokyo, Japan",
-    website: "https://quangkhanh.vercel.app/",
+  const { user: authUser } = useAuth();
+    // Use authenticated user data or fallback to default
+  const user = authUser || {
+    name: "Guest User",
+    email: "guest@example.com",
+    avatar: "/man.png",
+    isPremium: false,
+    joinDate: "Recently",
+    coverImage: "/34e2b8220213515.67bf12e77c4b6.jpg",
+    username: "@guest",
+    bio: "Welcome to MinnaGo! Please log in to see your personalized profile.",
+    location: "Unknown",
+    preferences: {
+      favoriteGenres: [],
+      watchedAnime: 0,
+      readManga: 0,
+    },
   };
 
+  // Use user preferences or defaults for stats
   const stats = [
     {
       label: "Anime Watched",
-      value: "247",
+      value: user.preferences?.watchedAnime?.toString() || "0",
       icon: <Play className="w-5 h-5" />,
     },
     {
-      label: "Manga Read",
-      value: "189",
+      label: "Manga Read", 
+      value: user.preferences?.readManga?.toString() || "0",
       icon: <BookOpen className="w-5 h-5" />,
     },
     { label: "Favorites", value: "42", icon: <Heart className="w-5 h-5" /> },
@@ -178,11 +185,11 @@ export default function ProfilePage() {
       icon: <Gift className="w-5 h-5" />,
       href: "/support",
     },
-  ];
-  return (
-    <React.Fragment>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
+  ];  return (
+    <AuthGuard requireAuth={true}>
+      <React.Fragment>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
         {/* Cover Image and Profile Header */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -191,9 +198,8 @@ export default function ProfilePage() {
           className="relative h-80 overflow-hidden"
         >
           {/* Cover Image */}
-          <div className="absolute inset-0">
-            <Image
-              src={user.coverImage}
+          <div className="absolute inset-0">            <Image
+              src={user.coverImage || "/34e2b8220213515.67bf12e77c4b6.jpg"}
               alt="Cover"
               fill
               className="object-cover"
@@ -213,9 +219,8 @@ export default function ProfilePage() {
                   transition={{ duration: 0.6, delay: 0.2 }}
                   className="relative"
                 >
-                  <div className="w-32 h-32 rounded-full border-4 border-white/20 overflow-hidden bg-gradient-to-br from-purple-400 to-pink-500 p-1">
-                    <Image
-                      src={user.avatar}
+                  <div className="w-32 h-32 rounded-full border-4 border-white/20 overflow-hidden bg-gradient-to-br from-purple-400 to-pink-500 p-1">                    <Image
+                      src={user.avatar || "/man.png"}
                       alt={user.name}
                       width={120}
                       height={120}
@@ -591,9 +596,9 @@ export default function ProfilePage() {
                 </motion.div>
               )}
             </div>
-          </div>
-        </div>
+          </div>        </div>
       </div>
-    </React.Fragment>
+      </React.Fragment>
+    </AuthGuard>
   );
 }
