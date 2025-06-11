@@ -11,7 +11,7 @@ export default function Header() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-gradient-to-r from-purple-900/90 to-pink-900/90 backdrop-blur-md border-b border-purple-500/20 sticky top-0 z-50"
+      className="bg-gradient-to-r from-white/95 to-gray-100/95 dark:from-purple-900/90 dark:to-pink-900/90 backdrop-blur-md border-b border-gray-200/50 dark:border-purple-500/20 sticky top-0 z-50 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -28,29 +28,29 @@ export default function Header() {
               {/* Magical sparkles around logo */}
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-pink-400 rounded-full opacity-60 animate-pulse"></div>
               <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-60 animate-pulse delay-300"></div>
-            </motion.div>
-            <div className="text-2xl font-bold bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
+            </motion.div>{" "}
+            <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-200 dark:to-pink-200 bg-clip-text text-transparent">
               MinnaGo
             </div>
           </Link>{" "}
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            {" "}
             <Link
               href="/rankings"
-              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+              className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Rankings
             </Link>
-
             <Link
               href="/enhanced"
-              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+              className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Enhanced
             </Link>
             <Link
               href="/manga"
-              className="text-purple-200 hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+              className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Manga
             </Link>
@@ -67,10 +67,10 @@ export default function Header() {
               >
                 ✨ Try Premium
               </motion.button>
-            </Link>
+            </Link>{" "}
             {/* Search Icon */}
             <motion.button
-              className="p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
+              className="p-2 text-gray-600 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 transition-colors duration-300 hover:bg-gray-200/50 dark:hover:bg-purple-800/30 rounded-lg"
               whileHover={{ scale: 1.1, rotate: 15 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -79,7 +79,7 @@ export default function Header() {
             {/* User Icon */}
             <Link href="/profile">
               <motion.button
-                className="p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
+                className="p-2 text-gray-600 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 transition-colors duration-300 hover:bg-gray-200/50 dark:hover:bg-purple-800/30 rounded-lg"
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -93,10 +93,10 @@ export default function Header() {
               transition={{ duration: 0.3 }}
             >
               <ThemeToggle />
-            </motion.div>
+            </motion.div>{" "}
             {/* Mobile Menu */}
             <motion.button
-              className="md:hidden p-2 text-purple-200 hover:text-pink-200 transition-colors duration-300 hover:bg-purple-800/30 rounded-lg"
+              className="md:hidden p-2 text-gray-600 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 transition-colors duration-300 hover:bg-gray-200/50 dark:hover:bg-purple-800/30 rounded-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
