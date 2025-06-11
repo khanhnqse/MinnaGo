@@ -20,7 +20,9 @@ export default function Header() {
       className="bg-gradient-to-r from-white/95 to-gray-100/95 dark:from-purple-900/90 dark:to-pink-900/90 backdrop-blur-md border-b border-gray-200/50 dark:border-purple-500/20 sticky top-0 z-50 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">          {/* Logo */}
+        <div className="flex justify-between items-center h-16">
+          {" "}
+          {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <motion.div
               whileHover={{ rotate: 360 }}
@@ -52,12 +54,18 @@ export default function Header() {
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Rankings
-            </Link>
+            </Link>{" "}
             <Link
               href="/enhanced"
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Enhanced
+            </Link>
+            <Link
+              href="/random"
+              className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+            >
+              🎲 Random
             </Link>
             <Link
               href="/manga"
@@ -85,8 +93,8 @@ export default function Header() {
               whileHover={{ scale: 1.1, rotate: 15 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Search className="w-5 h-5" />            </motion.button>{" "}
-            
+              <Search className="w-5 h-5" />{" "}
+            </motion.button>{" "}
             {/* Authentication Section */}
             {isAuthenticated && user ? (
               <div className="relative">
@@ -106,7 +114,9 @@ export default function Header() {
                       className="w-full h-full rounded-full object-cover"
                     />
                   </div>
-                  <span className="hidden sm:block font-medium text-sm">{user.name}</span>
+                  <span className="hidden sm:block font-medium text-sm">
+                    {user.name}
+                  </span>
                 </motion.button>
 
                 {/* User Dropdown Menu */}
@@ -131,7 +141,7 @@ export default function Header() {
                             <span className="font-medium">Profile</span>
                           </motion.div>
                         </Link>
-                        
+
                         <Link href="/settings">
                           <motion.div
                             onClick={() => setShowUserMenu(false)}
@@ -145,7 +155,7 @@ export default function Header() {
                         </Link>
 
                         <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-                        
+
                         <motion.button
                           onClick={() => {
                             logout();
@@ -194,7 +204,6 @@ export default function Header() {
                 </Link>
               </div>
             )}
-            
             {/* Theme Toggle */}
             <motion.div
               whileHover={{ scale: 1.1, rotate: 180 }}
