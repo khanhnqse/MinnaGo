@@ -231,7 +231,8 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
             ))}
           </div>
         </div>
-      )}      {/* Compact Reactions */}
+      )}{" "}
+      {/* Compact Reactions */}
       {review.reactions && (
         <div className="mb-3">
           <h5 className="text-xs font-medium text-gray-500 dark:text-gray-500 mb-1.5 flex items-center uppercase tracking-wide">
@@ -240,15 +241,51 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
           </h5>
           <div className="flex flex-wrap gap-1">
             {[
-              { key: "nice", emoji: "👍", color: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" },
-              { key: "love_it", emoji: "❤️", color: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400" },
-              { key: "funny", emoji: "😄", color: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400" },
-              { key: "informative", emoji: "🧠", color: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" },
-              { key: "well_written", emoji: "✍️", color: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400" },
-              { key: "creative", emoji: "🎨", color: "bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400" },
-              { key: "confusing", emoji: "😕", color: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400" },
+              {
+                key: "nice",
+                emoji: "👍",
+                color:
+                  "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
+              },
+              {
+                key: "love_it",
+                emoji: "❤️",
+                color:
+                  "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400",
+              },
+              {
+                key: "funny",
+                emoji: "😄",
+                color:
+                  "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400",
+              },
+              {
+                key: "informative",
+                emoji: "🧠",
+                color:
+                  "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
+              },
+              {
+                key: "well_written",
+                emoji: "✍️",
+                color:
+                  "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
+              },
+              {
+                key: "creative",
+                emoji: "🎨",
+                color:
+                  "bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400",
+              },
+              {
+                key: "confusing",
+                emoji: "😕",
+                color:
+                  "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400",
+              },
             ].map(({ key, emoji, color }) => {
-              const count = review.reactions[key as keyof typeof review.reactions];
+              const count =
+                review.reactions[key as keyof typeof review.reactions];
               if (!count || count === 0) return null;
 
               return (

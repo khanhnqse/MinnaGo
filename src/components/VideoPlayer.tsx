@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { VideoPromo, VideoEpisode, VideoMusicVideo } from "@/types/anime";
-import { Play, X, ExternalLink, Youtube, Music, Tv } from "lucide-react";
+import { Play, X, ExternalLink, Youtube, Music, Tv, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -20,10 +20,19 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
     "promo"
   );
   const [isClient, setIsClient] = useState(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const videosPerPage = 6; // Show 6 videos per page
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Reset to page 1 when changing tabs
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
   const openVideo = (embedUrl: string) => {
     if (!embedUrl || typeof embedUrl !== "string") {
       console.error("Invalid embed URL provided:", embedUrl);
@@ -32,9 +41,59 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
     console.log("Opening video with URL:", embedUrl);
     setSelectedVideo(embedUrl);
   };
-
   const closeVideo = () => {
     setSelectedVideo(null);
+  };  // Pagination helper functions
+  const getCurrentPromoVideos = (): VideoPromo[] => {
+    const startIndex = (currentPage - 1) * videosPerPage;
+    const endIndex = startIndex + videosPerPage;
+    return videos.promo.slice(startIndex, endIndex);
+  };
+
+  const getCurrentEpisodeVideos = (): VideoEpisode[] => {
+    const startIndex = (currentPage - 1) * videosPerPage;
+    const endIndex = startIndex + videosPerPage;
+    return videos.episodes.slice(startIndex, endIndex);
+  };
+
+  const getCurrentMusicVideos = (): VideoMusicVideo[] => {
+    const startIndex = (currentPage - 1) * videosPerPage;
+    const endIndex = startIndex + videosPerPage;
+    return videos.music_videos.slice(startIndex, endIndex);
+  };
+
+  const getTotalPages = () => {
+    let totalVideos = 0;
+    
+    switch (activeTab) {
+      case "promo":
+        totalVideos = videos.promo.length;
+        break;
+      case "episodes":
+        totalVideos = videos.episodes.length;
+        break;
+      case "music":
+        totalVideos = videos.music_videos.length;
+        break;
+    }
+    
+    return Math.ceil(totalVideos / videosPerPage);
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < getTotalPages()) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const tabs = [
@@ -202,20 +261,20 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {" "}
-          {/* Promo Videos */}
+          {" "}          {/* Promo Videos */}
           {activeTab === "promo" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.promo
-                .map((video, index) => {
-                  // Add defensive checks for video structure
-                  if (!video || !video.trailer) {
-                    console.warn(
-                      `Promo video ${index} has invalid structure:`,
-                      video
-                    );
-                    return null;
-                  }
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getCurrentPromoVideos()
+                  .map((video, index) => {
+                    // Add defensive checks for video structure
+                    if (!video || !video.trailer) {
+                      console.warn(
+                        `Promo video ${index} has invalid structure:`,
+                        video
+                      );
+                      return null;
+                    }
 
                   return (
                     <motion.div
@@ -279,8 +338,7 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600 dark:text-gray-400">
                             Trailer
-                          </span>
-                          {video.trailer?.url && (
+                          </span>                          {video.trailer?.url && (
                             <a
                               href={video.trailer.url}
                               target="_blank"
@@ -296,12 +354,66 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                   );
                 })
                 .filter(Boolean)}
-            </div>
-          )}{" "}
-          {/* Episodes */}
+              </div>
+              
+              {/* Pagination for Promo Videos */}
+              {getTotalPages() > 1 && (
+                <div className="flex items-center justify-center mt-8 space-x-2">
+                  <motion.button
+                    onClick={goToPrevPage}
+                    disabled={currentPage === 1}
+                    className={`flex items-center px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentPage === 1
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                    }`}
+                    whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
+                    whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Previous
+                  </motion.button>
+
+                  <div className="flex items-center space-x-1">
+                    {Array.from({ length: getTotalPages() }, (_, i) => i + 1).map((page) => (
+                      <motion.button
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`w-10 h-10 rounded-lg font-semibold transition-all duration-200 ${
+                          currentPage === page
+                            ? "bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg"
+                            : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                        }`}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        {page}
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    onClick={goToNextPage}
+                    disabled={currentPage === getTotalPages()}
+                    className={`flex items-center px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentPage === getTotalPages()
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                    }`}
+                    whileHover={currentPage !== getTotalPages() ? { scale: 1.05 } : {}}
+                    whileTap={currentPage !== getTotalPages() ? { scale: 0.95 } : {}}
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </motion.button>
+                </div>
+              )}
+            </>
+          )}{" "}          {/* Episodes */}
           {activeTab === "episodes" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {videos.episodes.map((episode, index) => (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {getCurrentEpisodeVideos().map((episode, index) => (
                 <motion.div
                   key={`episode-${episode.mal_id || episode.episode || index}`}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -337,20 +449,73 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                     <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-semibold">
                       EP {episode.episode}
                     </div>
-                  </div>
-                  <div className="p-3">
+                  </div>                  <div className="p-3">
                     <h3 className="font-semibold text-gray-900 dark:text-white text-sm line-clamp-2">
                       {episode.title}
                     </h3>
                   </div>
                 </motion.div>
               ))}
-            </div>
+              </div>
+              
+              {/* Pagination for Episodes */}
+              {getTotalPages() > 1 && (
+                <div className="flex items-center justify-center mt-8 space-x-2">
+                  <motion.button
+                    onClick={goToPrevPage}
+                    disabled={currentPage === 1}
+                    className={`flex items-center px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentPage === 1
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                    }`}
+                    whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
+                    whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Previous
+                  </motion.button>
+
+                  <div className="flex items-center space-x-1">
+                    {Array.from({ length: getTotalPages() }, (_, i) => i + 1).map((page) => (
+                      <motion.button
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`w-10 h-10 rounded-lg font-semibold transition-all duration-200 ${
+                          currentPage === page
+                            ? "bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg"
+                            : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                        }`}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        {page}
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    onClick={goToNextPage}
+                    disabled={currentPage === getTotalPages()}
+                    className={`flex items-center px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentPage === getTotalPages()
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                    }`}
+                    whileHover={currentPage !== getTotalPages() ? { scale: 1.05 } : {}}
+                    whileTap={currentPage !== getTotalPages() ? { scale: 0.95 } : {}}
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </motion.button>
+                </div>
+              )}
+            </>
           )}{" "}          {/* Music Videos */}
           {activeTab === "music" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.music_videos
-                .map((video, index) => {
+            <>              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {getCurrentMusicVideos()
+                  .map((video, index) => {
                   // Add defensive checks for video structure
                   if (!video || !video.video) {
                     console.warn(
@@ -435,11 +600,64 @@ export default function VideoPlayer({ videos }: VideoPlayerProps) {
                           )}
                         </div>
                       </div>
-                    </motion.div>
-                  );
+                    </motion.div>                  );
                 })
                 .filter(Boolean)}
-            </div>
+              </div>
+              
+              {/* Pagination for Music Videos */}
+              {getTotalPages() > 1 && (
+                <div className="flex items-center justify-center mt-8 space-x-2">
+                  <motion.button
+                    onClick={goToPrevPage}
+                    disabled={currentPage === 1}
+                    className={`flex items-center px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentPage === 1
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                    }`}
+                    whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
+                    whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Previous
+                  </motion.button>
+
+                  <div className="flex items-center space-x-1">
+                    {Array.from({ length: getTotalPages() }, (_, i) => i + 1).map((page) => (
+                      <motion.button
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`w-10 h-10 rounded-lg font-semibold transition-all duration-200 ${
+                          currentPage === page
+                            ? "bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg"
+                            : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                        }`}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        {page}
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    onClick={goToNextPage}
+                    disabled={currentPage === getTotalPages()}
+                    className={`flex items-center px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      currentPage === getTotalPages()
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                        : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 border border-gray-200 dark:border-gray-600"
+                    }`}
+                    whileHover={currentPage !== getTotalPages() ? { scale: 1.05 } : {}}
+                    whileTap={currentPage !== getTotalPages() ? { scale: 0.95 } : {}}
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </motion.button>
+                </div>
+              )}
+            </>
           )}
           {/* Empty State for Active Tab */}
           {((activeTab === "promo" && videos.promo.length === 0) ||
