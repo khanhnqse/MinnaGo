@@ -211,46 +211,126 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
             })}
           </div>
         </div>
+      )}
+      {/* Tags Section */}
+      {review.tags && review.tags.length > 0 && (
+        <div className="mb-6">
+          <h5 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+            <span className="mr-2">🏷️</span>
+            Review Tags
+          </h5>
+          <div className="flex flex-wrap gap-2">
+            {review.tags.map((tag, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700/50 hover:shadow-md transition-all duration-200"
+              >
+                <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full mr-1.5"></span>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}      {/* Compact Reactions */}
+      {review.reactions && (
+        <div className="mb-3">
+          <h5 className="text-xs font-medium text-gray-500 dark:text-gray-500 mb-1.5 flex items-center uppercase tracking-wide">
+            <span className="mr-1">💬</span>
+            Reactions
+          </h5>
+          <div className="flex flex-wrap gap-1">
+            {[
+              { key: "nice", emoji: "👍", color: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" },
+              { key: "love_it", emoji: "❤️", color: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400" },
+              { key: "funny", emoji: "😄", color: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400" },
+              { key: "informative", emoji: "🧠", color: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" },
+              { key: "well_written", emoji: "✍️", color: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400" },
+              { key: "creative", emoji: "🎨", color: "bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400" },
+              { key: "confusing", emoji: "😕", color: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400" },
+            ].map(({ key, emoji, color }) => {
+              const count = review.reactions[key as keyof typeof review.reactions];
+              if (!count || count === 0) return null;
+
+              return (
+                <span
+                  key={key}
+                  className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${color} hover:scale-105 transition-transform duration-200 cursor-pointer`}
+                  title={`${count} reactions`}
+                >
+                  <span className="mr-1">{emoji}</span>
+                  <span className="font-semibold">{count}</span>
+                </span>
+              );
+            })}
+          </div>
+        </div>
       )}{" "}
       {/* Footer with Actions */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-        <div className="flex items-center space-x-4">
-          {/* Reaction buttons */}
-          {review.reactions && (
-            <div className="flex items-center space-x-2">
-              <button className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors duration-200 text-xs font-medium">
-                <ThumbsUp className="h-3 w-3" />
-                <span>Helpful</span>
-              </button>
-              {review.reactions.funny > 0 && (
-                <button className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 transition-colors duration-200 text-xs font-medium">
-                  <span>😄</span>
-                  <span>{review.reactions.funny}</span>
-                </button>
+        <div className="flex items-center space-x-3">
+          {/* Quick reaction summary */}
+          <div className="flex items-center space-x-2">
+            <button className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors duration-200 text-xs font-medium group">
+              <ThumbsUp className="h-3 w-3 group-hover:scale-110 transition-transform duration-200" />
+              <span>Helpful</span>
+              {review.reactions?.overall > 0 && (
+                <span className="bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-1.5 py-0.5 rounded-full text-xs font-semibold">
+                  {review.reactions.overall}
+                </span>
               )}
-            </div>
-          )}
+            </button>
+
+            {/* Overall score badge */}
+            {review.scores?.overall && (
+              <div
+                className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-semibold ${getScoreBg(
+                  review.scores.overall
+                )} ${getScoreColor(review.scores.overall)}`}
+              >
+                <Star className="h-3 w-3 fill-current" />
+                <span>{review.scores.overall}/10</span>
+              </div>
+            )}
+
+            {/* Episodes watched badge */}
+            {review.episodes_watched && (
+              <div className="flex items-center space-x-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs font-medium">
+                <Eye className="h-3 w-3" />
+                <span>{review.episodes_watched} eps</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Read more button */}
-        {review.review.length > 280 && (
-          <button className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium transition-colors duration-200 flex items-center space-x-1 group">
-            <span>Read more</span>
-            <svg
-              className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        )}
+        <div className="flex items-center space-x-2">
+          {/* Review type indicator */}
+          {review.is_preliminary && (
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">
+              <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-1"></span>
+              Preliminary
+            </span>
+          )}
+
+          {/* Read more button */}
+          {review.review.length > 280 && (
+            <button className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium transition-colors duration-200 flex items-center space-x-1 group">
+              <span>Read more</span>
+              <svg
+                className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
     </motion.div>
   );
