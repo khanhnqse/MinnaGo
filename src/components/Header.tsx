@@ -11,6 +11,7 @@ import { useState } from "react";
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
     <motion.header
@@ -66,12 +67,18 @@ export default function Header() {
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               🎲 Random
-            </Link>
+            </Link>{" "}
             <Link
               href="/manga"
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Manga
+            </Link>
+            <Link
+              href="/clubs"
+              className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
+            >
+              👥 Clubs
             </Link>
           </nav>{" "}
           {/* Right side */}
@@ -212,16 +219,122 @@ export default function Header() {
             >
               <ThemeToggle />
             </motion.div>{" "}
-            {/* Mobile Menu */}
+            {/* Mobile Menu */}{" "}
             <motion.button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="md:hidden p-2 text-gray-600 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 transition-colors duration-300 hover:bg-gray-200/50 dark:hover:bg-purple-800/30 rounded-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
               <Menu className="w-5 h-5" />
-            </motion.button>
+            </motion.button>{" "}
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {showMobileMenu && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white/95 dark:bg-purple-900/95 backdrop-blur-md border-t border-gray-200/50 dark:border-purple-500/20"
+            >
+              <div className="px-4 py-4 space-y-2">
+                <Link
+                  href="/"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                >
+                  🏠 Home
+                </Link>
+                <Link
+                  href="/rankings"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                >
+                  🏆 Rankings
+                </Link>
+                <Link
+                  href="/random"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                >
+                  🎲 Random
+                </Link>
+                <Link
+                  href="/manga"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                >
+                  📚 Manga
+                </Link>
+                <Link
+                  href="/clubs"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                >
+                  👥 Clubs
+                </Link>
+
+                {/* Mobile Auth Section */}
+                <div className="border-t border-gray-200/50 dark:border-purple-500/20 pt-4 mt-4">
+                  {isAuthenticated ? (
+                    <div className="space-y-2">
+                      <Link
+                        href="/profile"
+                        onClick={() => setShowMobileMenu(false)}
+                        className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                      >
+                        👤 Profile
+                      </Link>
+                      <Link
+                        href="/favorites"
+                        onClick={() => setShowMobileMenu(false)}
+                        className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                      >
+                        ❤️ Favorites
+                      </Link>
+                      <Link
+                        href="/settings"
+                        onClick={() => setShowMobileMenu(false)}
+                        className="block px-4 py-2 text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 hover:bg-gray-100/50 dark:hover:bg-purple-800/30 rounded-lg transition-colors duration-300"
+                      >
+                        ⚙️ Settings
+                      </Link>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setShowMobileMenu(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-300"
+                      >
+                        🚪 Logout
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Link
+                        href="/auth/login"
+                        onClick={() => setShowMobileMenu(false)}
+                        className="block px-4 py-2 text-center bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        href="/auth/signup"
+                        onClick={() => setShowMobileMenu(false)}
+                        className="block px-4 py-2 text-center border border-purple-300 dark:border-purple-600 text-purple-600 dark:text-purple-300 rounded-lg font-semibold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-300"
+                      >
+                        Sign Up
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.header>
   );

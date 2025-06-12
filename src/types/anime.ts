@@ -284,3 +284,102 @@ export interface AnimeReviewsResponse {
     };
   };
 }
+
+// Club interfaces
+export interface Club {
+  mal_id: number;
+  name: string;
+  url: string;
+  images: {
+    jpg: {
+      image_url: string;
+    };
+    webp?: {
+      image_url: string;
+    };
+  };
+  members: number;
+  category: string;
+  created: string;
+  access: string;
+}
+
+export interface ClubsResponse {
+  data: Club[];
+  pagination: {
+    last_visible_page: number;
+    has_next_page: boolean;
+    current_page: number;
+    items: {
+      count: number;
+      total: number;
+      per_page: number;
+    };
+  };
+}
+
+// Detailed Club interface for individual club pages
+export interface ClubDetail extends Club {
+  stats?: {
+    anime_watching: number;
+    anime_completed: number;
+    anime_on_hold: number;
+    anime_dropped: number;
+    anime_plan_to_watch: number;
+    manga_reading: number;
+    manga_completed: number;
+    manga_on_hold: number;
+    manga_dropped: number;
+    manga_plan_to_read: number;
+  };
+  about?: string;
+  title?: string;
+  description?: string;
+  anime_relations?: ClubRelation[];
+  manga_relations?: ClubRelation[];
+  character_relations?: ClubRelation[];
+  staff?: ClubStaff[];
+}
+
+export interface ClubRelation {
+  mal_id: number;
+  type: string;
+  name: string;
+  url: string;
+}
+
+export interface ClubStaff {
+  url: string;
+  username: string;
+}
+
+export interface ClubDetailResponse {
+  data: ClubDetail;
+}
+
+export interface ClubMember {
+  username: string;
+  url: string;
+  images: {
+    jpg: {
+      image_url: string;
+    };
+    webp?: {
+      image_url: string;
+    };
+  };
+}
+
+export interface ClubMembersResponse {
+  data: ClubMember[];
+  pagination: {
+    last_visible_page: number;
+    has_next_page: boolean;
+    current_page: number;
+    items: {
+      count: number;
+      total: number;
+      per_page: number;
+    };
+  };
+}
