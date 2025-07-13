@@ -56,17 +56,17 @@ export default function Header() {
             >
               Rankings
             </Link>{" "}
-            <Link
+            {/* <Link
               href="/enhanced"
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
               Enhanced
-            </Link>
+            </Link> */}
             <Link
               href="/random"
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
-              🎲 Random
+              Random
             </Link>{" "}
             <Link
               href="/manga"
@@ -78,7 +78,7 @@ export default function Header() {
               href="/clubs"
               className="text-gray-700 dark:text-purple-200 hover:text-purple-600 dark:hover:text-pink-200 font-medium transition-colors duration-300 hover:scale-105 transform"
             >
-              👥 Clubs
+              Clubs
             </Link>
           </nav>{" "}
           {/* Right side */}
